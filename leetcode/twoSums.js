@@ -15,8 +15,7 @@ var twoSum = function(nums, target) {
     var r = _nums.length - 1; // right 索引
     var _res = [];
     var res = [];
-    var _sums = 0;
-
+    var _sums = 0;  poiuytr
     while(l < r) {
     	_sums = _nums[l] + _nums[r];
     	if (_sums == target) {
