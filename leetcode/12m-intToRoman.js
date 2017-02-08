@@ -11,11 +11,9 @@ var intToRoman = function(num) {
     ];
     num += '';
     num = num.split('').reverse();
-    var len = num.length;
     var n = '';
-    for (var i = 0; i < len; i++) {
-        n = roman[i][+ num[i]] + n;
+    for (var i = num.length - 1; i >= 0; i--) {
+        n += roman[i][+ num[i]];
     }
-    
     return n;
 };
