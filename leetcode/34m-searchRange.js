@@ -31,7 +31,7 @@ var searchRange = function(nums, target) {
             rr = m - 1;
         }
     }
-	if (rr < 0) {
+	if (rr <= 0) {
 		return res;
 	}
     if(ll <= rr)
