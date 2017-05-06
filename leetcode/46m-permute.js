@@ -26,5 +26,5 @@ var permute = function(nums) {
     }
 };
 
-// console.log(permute([1,2,1]));
+console.log(permute([1,2,1]));
 // console.log(permute([1,2,3]));

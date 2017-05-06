@@ -1,5 +1,5 @@
 /**
- * @param {number[]} nums
+ * @param {number[]} nums 两数之和 ＝ target，返回 两数索引
  * @param {number} target
  * @return {number[]}
  **/
