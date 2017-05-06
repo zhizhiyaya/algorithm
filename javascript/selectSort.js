@@ -16,9 +16,11 @@ function selectSort(arr, n) {
 			}
 		}
 		//将这个元素放到无序区的开头
-		mid = arr[i];
-		arr[i] = arr[minIndex];
-		arr[minIndex] = mid;
+		if (minIndex !== i) {
+			mid = arr[i];
+			arr[i] = arr[minIndex];
+			arr[minIndex] = mid;
+		}
     }
 	return arr;
 }
