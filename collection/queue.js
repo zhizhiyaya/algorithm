@@ -53,3 +53,7 @@ export function _associate(arrVal, arrKey) {
     }
     return obj;
 }
+
+function isFunction (fn) {
+	return typeof fn === 'function';
+}
