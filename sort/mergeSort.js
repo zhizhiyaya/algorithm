@@ -1,4 +1,4 @@
-/** mergeArray
+/** 归并排序 mergeArray
  * 采用 分治法，
  * 1、Divide: 把长度为n的输入序列分成两个长度为 n/2 的子序列。
  * 2、Conquer: 对这两个子序列分别采用 归并排序。
