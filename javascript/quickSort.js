@@ -7,14 +7,14 @@
  */
 
 function quickSort (arr, l, r) {
-	var i, j;
+
 	if (l < 0 || r < 0 || l >= r) {
 		return false;
 	}
 	var cur = arr[l]; // 以当前分组的第一个为基准
-	if (l <= r) {
-		i = l;
-		j = r;
+	var i = l,
+	 	j = r;
+	if (l < r) {
 		while(i != j) {
 			while(arr[j] > cur && i < j) {
 				j--;        //从右向左找第1个小于基准值的位置j
@@ -38,3 +38,5 @@ function quickSort (arr, l, r) {
     quickSort(arr, i + 1, r);    //对基准值右半部递归调用本函数
 	return arr;
  }
+
+ console.log(quickSort([5, 4, 6, 2, 3, 1], 0, 5));
