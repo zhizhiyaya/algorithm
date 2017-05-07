@@ -27,3 +27,4 @@ Thumbs.db
 # *.zip
 # *.tar
 # *.tar.gz
+/sort/BinaryTree.js
