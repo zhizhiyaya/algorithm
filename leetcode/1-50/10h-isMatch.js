@@ -5,7 +5,12 @@
  * @return {boolean}
  */
 var isMatch = function(s, p) {
-	var reg = eval('/' + p + '/');
+    var reg;
+    if (p.indexOf('*')) {
+    	reg = eval('/' + p + '/');	
+    } else {
+    	reg = eval('/' + '\b' + p + '\b' + '/');	
+    }
     return reg.test(s);
 };
 
