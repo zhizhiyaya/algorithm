@@ -38,7 +38,7 @@ class BinarySortTree {
 
     // 新插入的节点均作为叶子节点插入
     insertNode(curNode, newNode) {
-        if (newNode.data <= curNode.data ) { // 小于等于放左边
+        if (newNode.data < curNode.data ) { // 小于等于放左边
             if (!curNode.left) {
                 curNode.left = newNode;
                 newNode.parent = curNode;
@@ -110,22 +110,64 @@ class BinarySortTree {
     }
 
     // 前序遍历, 根 左右
-    preOrderTraverse(curNode) {
-        if (curNode) {
-            this.visit(curNode);
-            this.preOrderTraverse(curNode.left);
-            this.preOrderTraverse(curNode.right);
+    // preOrderTraverse(curNode) {
+    //     if (curNode) {
+    //         this.visit(curNode);
+    //         this.preOrderTraverse(curNode.left);
+    //         this.preOrderTraverse(curNode.right);
+    //     }
+    // }
+
+    // 前序非递归
+    preOrderTraverse() {
+        let root = this.root;
+
+        if(root) {
+            let stack = new Stack();
+            while(root || !stack.isEmpty()) {
+                while (root) {
+                    this.visit(root);
+                    stack.push(root);
+                    root = root.left;
+                }
+                if (!stack.isEmpty()) {
+                    root = stack.pop();
+                    root = root.right;
+                }
+            }
         }
     }
+
     // 中序遍历，左 根 右
     // 中序遍历的结果是有序的
-    inOrderTraverse(curNode) {
-        if (curNode) {
-            this.inOrderTraverse(curNode.left);
-            this.visit(curNode);
-            this.inOrderTraverse(curNode.right);
+    // inOrderTraverse(curNode) {
+    //     if (curNode) {
+    //         this.inOrderTraverse(curNode.left);
+    //         this.visit(curNode);
+    //         this.inOrderTraverse(curNode.right);
+    //     }
+    // }
+
+    // 中序非递归
+    inOrderTraverse() {
+        let root = this.root;
+
+        if(root) {
+            let stack = new Stack();
+            while(root || !stack.isEmpty()) {
+                while (root) {
+                    stack.push(root);
+                    root = root.left;
+                }
+                if (!stack.isEmpty()) {
+                    root = stack.pop();
+                    this.visit(root);
+                    root = root.right;
+                }
+            }
         }
     }
+
     // 后序遍历， 左右 根
     postOrderTraverse(curNode) {
         if (curNode) {
@@ -134,10 +176,37 @@ class BinarySortTree {
             this.visit(curNode);
         }
     }
+
+    // 后序非递归
+    // postOrderTraverse() {
+    //     let root = this.root;
+    //
+    // }
 }
 
 
 
-class Stack() {
-
+class Stack {
+    constructor() {
+        this.stack = [];
+    }
+    push(v) {
+        this.stack.push(v);
+    }
+    pop() {
+        return this.stack.pop();
+    }
+    isEmpty() {
+        return this.stack.length <= 0;
+    }
 }
+
+
+var bt = new BinarySortTree();
+bt.createOrderBT([8, 9, 1, 3, 10, 2, 19]);
+// bt.inOrderTraverse(bt.root);
+// bt.postOrderTraverse(bt.root);
+
+// bt.preOrderTraverse();
+// bt.inOrderTraverse();
+// bt.postOrderTraverse();
