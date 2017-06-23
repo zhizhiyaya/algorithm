@@ -23,7 +23,7 @@ class BinarySortTree {
         this.size = root ? 1 : 0;
     }
 
-    // 将 list 创建为有序二叉树
+    // 将 list 创建为有序二叉树（insert 递归）
     createOrderBT(list) {
         let i = list.length - 1;
         for(; i >= 0; i--) {
@@ -34,6 +34,11 @@ class BinarySortTree {
                 this.root = curNode;
             }
         }
+    }
+
+    // 非递归创建二叉树
+    createBT(list) {
+
     }
 
     // 新插入的节点均作为叶子节点插入
@@ -68,8 +73,8 @@ class BinarySortTree {
     delete(data) {
 
         if (this.root) {
-            this.search(data);
-            const searchNode = this.searchNode;
+            debugger
+            const searchNode = this.search(data);
             let {target, isRight} = searchNode || {};
             if (target) {
                 let {left, right, parent} = target;
@@ -98,9 +103,9 @@ class BinarySortTree {
                 target: curNode
             };
         } else if (curNode.data < data) {
-            curNode.left && this.search(data, curNode.left, false);
+            return curNode.left ? this.search(data, curNode.left, false) : null;
         } else {
-            curNode.right && this.search(data, curNode.right, true);
+            return curNode.right ? this.search(data, curNode.right, true) : null;
         }
     }
 
@@ -178,10 +183,25 @@ class BinarySortTree {
     }
 
     // 后序非递归
+    // 1. 栈s初始化;
+    // 2. 循环直到root为空且栈s为空
+    //  2.1 当root非空时循环
+    //      2.1.1 将root连同标志flag=1 入栈;
+    //      2.1.2 继续遍历root的左子树;
+    //  2.2 当栈s 非空且栈顶元素的标志为2 时,出栈并输出栈顶结点;
+    //  2.3 若栈非空,将栈顶元素的标志改为2,准备遍历栈顶结点的右子树
     // postOrderTraverse() {
     //     let root = this.root;
     //
     // }
+
+    getMin() {
+
+    }
+
+    getMax() {
+
+    }
 }
 
 
