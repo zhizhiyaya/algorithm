@@ -114,7 +114,7 @@ class BinarySortTree {
         console.log(curNode.data);
     }
 
-    // 前序遍历, 根 左右
+    // 前序递归遍历, 根 左右
     // preOrderTraverse(curNode) {
     //     if (curNode) {
     //         this.visit(curNode);
@@ -128,14 +128,14 @@ class BinarySortTree {
         let root = this.root;
 
         if(root) {
-            let stack = new Stack();
-            while(root || !stack.isEmpty()) {
+            let stack = [];
+            while(root || stack.length) {
                 while (root) {
                     this.visit(root);
                     stack.push(root);
                     root = root.left;
                 }
-                if (!stack.isEmpty()) {
+                if (stack.length) {
                     root = stack.pop();
                     root = root.right;
                 }
@@ -143,7 +143,7 @@ class BinarySortTree {
         }
     }
 
-    // 中序遍历，左 根 右
+    // 中序递归遍历，左 根 右
     // 中序遍历的结果是有序的
     // inOrderTraverse(curNode) {
     //     if (curNode) {
@@ -158,13 +158,13 @@ class BinarySortTree {
         let root = this.root;
 
         if(root) {
-            let stack = new Stack();
-            while(root || !stack.isEmpty()) {
+            let stack = [];
+            while(root || stack.length) {
                 while (root) {
                     stack.push(root);
                     root = root.left;
                 }
-                if (!stack.isEmpty()) {
+                if (stack.length) {
                     root = stack.pop();
                     this.visit(root);
                     root = root.right;
@@ -173,14 +173,14 @@ class BinarySortTree {
         }
     }
 
-    // 后序遍历， 左右 根
-    postOrderTraverse(curNode) {
-        if (curNode) {
-            this.postOrderTraverse(curNode.left);
-            this.postOrderTraverse(curNode.right);
-            this.visit(curNode);
-        }
-    }
+    // 后序递归遍历， 左右 根
+    // postOrderTraverse(curNode) {
+    //     if (curNode) {
+    //         this.postOrderTraverse(curNode.left);
+    //         this.postOrderTraverse(curNode.right);
+    //         this.visit(curNode);
+    //     }
+    // }
 
     // 后序非递归
     // 1. 栈s初始化;
@@ -188,12 +188,41 @@ class BinarySortTree {
     //  2.1 当root非空时循环
     //      2.1.1 将root连同标志flag=1 入栈;
     //      2.1.2 继续遍历root的左子树;
-    //  2.2 当栈s 非空且栈顶元素的标志为2 时,出栈并输出栈顶结点;
-    //  2.3 若栈非空,将栈顶元素的标志改为2,准备遍历栈顶结点的右子树
-    // postOrderTraverse() {
-    //     let root = this.root;
-    //
-    // }
+    //  2.2 当栈s非空，且栈顶元素被访问过右子树（标志为2） 时,出栈并输出栈顶结点;
+    //  2.3 若栈非空,将栈顶元素的标志改为2,准备遍历栈顶结点的 右子树
+    postOrderTraverse() {
+        let root = this.root;
+        if(root) {
+            let stack = [];
+            while(root || stack.length) {
+
+                while (root && !root.flag) { // 直到无左子树
+                    root.flag = 1;
+                    stack.push(root);
+                    if (root.left) {
+                        root = root.left;
+                    } else {
+                        break;
+                    }
+                }
+
+                // 遍历父节点，以当前节点为根的二叉树的后序的最后一个节点
+                if (stack.length && stack[stack.length - 1].flag === 2) {
+                    root = stack.pop();
+                    this.visit(root);
+                    root = stack[stack.length - 1];
+                }
+
+                if (stack.length) {
+                    // 设置标记 为 遍历该子树的右子树
+                    stack[stack.length - 1].flag = 2;
+                    if (root.right) {
+                        root = root.right;
+                    }
+                }
+            }
+        }
+    }
 
     getMin() {
 
@@ -204,29 +233,11 @@ class BinarySortTree {
     }
 }
 
-
-
-class Stack {
-    constructor() {
-        this.stack = [];
-    }
-    push(v) {
-        this.stack.push(v);
-    }
-    pop() {
-        return this.stack.pop();
-    }
-    isEmpty() {
-        return this.stack.length <= 0;
-    }
-}
-
-
 var bt = new BinarySortTree();
 bt.createOrderBT([8, 9, 1, 3, 10, 2, 19]);
 // bt.inOrderTraverse(bt.root);
-// bt.postOrderTraverse(bt.root);
+// bt.postOrderTraverse(bt.root); // 1 8 9 3 10 2 19
 
 // bt.preOrderTraverse();
 // bt.inOrderTraverse();
-// bt.postOrderTraverse();
+bt.postOrderTraverse(); // 1 8 9 3 10 2 19
