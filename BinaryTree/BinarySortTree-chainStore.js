@@ -69,21 +69,29 @@ class BinarySortTree {
     // 1、有左子树， （ 有无右子树）
     // 2、无左子树，有右子树
     // 3、无论如何 将该节点置为 null, 断绝和其他节点的任何关系，同时便于垃圾回收
-    // TODO searchNode undefined
-    delete(data) {
-
+    // TODO target undefined
+    delete(data) {debugger
         if (this.root) {
-            debugger
-            const searchNode = this.search(data);
-            let {target, isRight} = searchNode || {};
+            let target = this.search(data);
             if (target) {
                 let {left, right, parent} = target;
-                const nodeType = isRight ? 'right' : 'left';
+                const nodeType = parent.data <= target.data ? 'right' : 'left';
                 if(left) { // 有左子树
                     left.parent = parent;
                     parent[nodeType] = left;
                     if (right) {
-                        this.insertNode(left, right);
+                        const childRight = left.right;
+                        if (childRight) {
+                             do {
+                                if (childRight.right) {
+                                    childRight = childRight.right;
+                                } else {
+                                    break;
+                                }
+                            } while (childRight)
+                        } else {
+                            left.right = right;
+                        }
                     }
                 } else if (right) { // 无左子树 有右子树
                     parent[nodeType] = right;
@@ -91,22 +99,23 @@ class BinarySortTree {
                 target = null;
                 return true;
             }
+            return false;
         }
         return false;
     }
 
     search(data, curNode, isRight) {
-        curNode = curNode || this.root;
-        if (curNode.data === data) {
-            return {
-                isRight: !!isRight,
-                target: curNode
-            };
-        } else if (curNode.data < data) {
-            return curNode.left ? this.search(data, curNode.left, false) : null;
-        } else {
-            return curNode.right ? this.search(data, curNode.right, true) : null;
+        let root = this.root;
+        while (root) {
+            if (data > root.data) {
+                root = root.right;
+            } else if(data < root.data) {
+                root = root.left;
+            } else {
+                break;
+            }
         }
+        return root;
     }
 
     // 访问当前节点
@@ -194,10 +203,12 @@ class BinarySortTree {
         let root = this.root;
         if(root) {
             let stack = [];
+            let flagStack = [];
             while(root || stack.length) {
 
                 while (root && !root.flag) { // 直到无左子树
-                    root.flag = 1;
+                    // root.flag = 1;
+                    flagStack.push(1);
                     stack.push(root);
                     if (root.left) {
                         root = root.left;
@@ -207,15 +218,16 @@ class BinarySortTree {
                 }
 
                 // 遍历父节点，以当前节点为根的二叉树的后序的最后一个节点
-                if (stack.length && stack[stack.length - 1].flag === 2) {
+                if (stack.length && flagStack[flagStack.length - 1] === 2) {
                     root = stack.pop();
+                    flagStack.pop();
                     this.visit(root);
                     root = stack[stack.length - 1];
                 }
 
                 if (stack.length) {
                     // 设置标记 为 遍历该子树的右子树
-                    stack[stack.length - 1].flag = 2;
+                    flagStack[flagStack.length - 1] = 2;
                     if (root.right) {
                         root = root.right;
                     }
@@ -225,11 +237,28 @@ class BinarySortTree {
     }
 
     getMin() {
-
+        let root = this.root;
+        root = root.left ? root.left : root;
+        while (root) {
+            if (root.left) {
+                root = root.left;
+            } else {
+                break;
+            }
+        }
+        return root ? root.data : 'no data';
     }
 
     getMax() {
-
+        let root = this.root;
+        while (root) {
+            if (root.right) {
+                root = root.right;
+            } else {
+                break;
+            }
+        }
+        return root ? root.data : 'no data';
     }
 }
 
