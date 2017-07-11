@@ -236,6 +236,39 @@ class BinarySortTree {
         }
     }
 
+    //深度优先遍历
+    depthFirstSearch() {
+        var stack = [];
+        stack.push(this.root);
+        var node = null;
+        while(stack.length) {
+            node = stack.pop();
+            this.visit(node);
+            if(node.right) {
+                stack.push(node.right);  //先将右子树压栈
+            }
+            if(node.left) {
+                stack.push(node.left);  //再将左子树压栈
+            }
+        }
+    }
+    //广度优先遍历
+    breadthFirstSearch() {
+        var queue = [];
+        queue.push(this.root);
+        var node = null;
+        while(queue.length) {
+            node = queue.shift();
+            this.visit(node);
+            if(node.left) {
+                queue.push(node.left);  //先将左子树入队
+            }
+            if(node.right) {
+                queue.push(node.right); //再将右子树入队
+            }
+        }
+    }
+
     getMin() {
         let root = this.root;
         root = root.left ? root.left : root;
@@ -269,4 +302,6 @@ bt.createOrderBT([8, 9, 1, 3, 10, 2, 19]);
 
 // bt.preOrderTraverse();
 // bt.inOrderTraverse();
-bt.postOrderTraverse(); // 1 8 9 3 10 2 19
+// bt.depthFirstSearch();
+bt.breadthFirstSearch(); // 19 2 1 10 3 9 8
+// bt.postOrderTraverse(); // 1 8 9 3 10 2 19
