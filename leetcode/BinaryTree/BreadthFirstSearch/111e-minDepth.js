@@ -16,14 +16,27 @@ var minDepth = function(root) {
 	let queue = [];
 	queue.push(root);
 	let depth = 0;
+	let curLevelNodeSum = 1;
+	let childSum = 0;
 	while (queue.length) {
 		depth++;
-		root = queue.shift();
-		if (!root.left && !root.right) {
-			return depth;
+        childSum = 0;
+		for (var i = curLevelNodeSum.length; i > 0; i--) {
+			root = queue.shift();
+			if (!root.left || !root.right) {
+				return depth + 1;
+			}
+			if (root.left) {
+				childSum++;
+				queue.push(root.left);
+			}
+			if (root.right) {
+				childSum++;
+				queue.push(root.right);
+			}
 		}
-		root.left && queue.push(root.left);
-		root.right && queue.push(root.right);
+
+		curLevelNodeSum = childSum;
 	}
 	return depth;
 };
