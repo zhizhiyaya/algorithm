@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>version 匹配</title>
+	</head>
+	<body>
+		<script>
+			function searchLastVer(arr, ver) {
+				var reg = new RegExp(ver),
+					lastVer = null,
+					matchVer = null;
+
+				for (var i = arr.length - 1; i--; ) {
+					matchVer = reg.exec(arr[i]);
+					if (matchVer) {
+						matchVer = matchVer.input;
+						if (lastVer) {
+							var lastVerArr = lastVer.split('.');
+							var matchVerArr = matchVer.split('.');
+							debugger
+							for (var j = 0, len = lastVerArr.length; j < len; j++) {
+								if (lastVerArr[j] < matchVerArr[j]) {
+									lastVer = matchVer;
+									break;
+								}
+							}
+						} else {
+							lastVer = matchVer;
+						}
+					}
+				}
+				return lastVer;
+			}
+			// console.log(searchLastVer(['2.1.3', '1.2.3', '2.1.9', '2.3.1'], '2.1.3'))
+			// console.log(searchLastVer(['2.1.2', '1.2.3', '2.1.9', '2.3.1'], '2.1.3'))
+			// console.log(searchLastVer(['2.1.3', '1.2.3', '2.1.9', '2.3.1'], '2.1.*'))
+			// console.log(searchLastVer(['2.2.3', '1.2.3', '2.2.9', '2.3.1'], '2.1.*'))
+			console.log(searchLastVer(['2.1.3', '1.2.3', '2.1.9', '2.3.1'], '2.*.*'))
+			// console.log(searchLastVer(['2.1.3', '1.2.3', '2.1.9', '2.3.1'], '5.*.*'))
+		</script>
+	</body>
+</html>
