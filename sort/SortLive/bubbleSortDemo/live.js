@@ -1,7 +1,18 @@
 (function(){
-	var arr = [19, 38, 11, 22, 44, 67, 55, 96];
-	var domArr = getDomArr(arr);
+	var arr = generateRandomArr(16);
+	var parentElem = getDomArr(arr);
+	document.body.appendChild(parentElem);
+	sort();
 
+	function generateRandomArr(length) {
+		var arr = [];
+		var num = 0;
+		for (var i = length - 1; i--; ) {
+			num = parseInt(Math.random() * 100);
+			arr.push(num);
+		}
+		return arr;
+	}
 
 	function getDomArr(arr) {
 		var parentElem = document.createElement("div");
@@ -12,47 +23,34 @@
 			childElem.style.left = 0;
 			childElem.style.width = arr[i] * 4 + 'px';
 			childElem.style.top = i * 50 + 'px';
+			childElem.innerHTML = arr[i];
 			parentElem.appendChild(childElem);
 		}
-		document.body.appendChild(parentElem);
-		return domArr;
+		return parentElem;
 	}
 	function sort(){
-		debugger
-		var numbers = random();
 		var parentElem = document.getElementById("boxes");
 		var i = 0, j = 0;
 		var time = setInterval(function() {
-			if (i < numbers.length) {
-				if (j < numbers.length - i) {
-					if (numbers[j] > numbers[j + 1]) {
-						var temp = numbers[j];
-						numbers[j] = numbers[j + 1];
-						numbers[j + 1] = temp;
-						parentElem.innerHTML = "";
-						for (var k = 0; k < numbers.length; k++) {
-							var textNode = document.createTextNode(numbers[k]);
-							var childElem = document.createElement("div");
-							childElem.appendChild(textNode);
-							childElem.style.left = k * 20 + k * 2 + "px";
-							childElem.style.top = 300 - 3 * numbers[k] + "px";
-							childElem.style.height = 3 * numbers[k] + "px";
-							childElem.setAttribute("class","box");
-							parentElem.appendChild(childElem);
-						}
+			if (i < arr.length) {
+				if (j < arr.length - i) {
+					if (arr[j] > arr[j + 1]) {
+						var temp = arr[j];
+						arr[j] = arr[j + 1];
+						arr[j + 1] = temp;
+						var cloneParent = getDomArr(arr);
+						parentElem.innerHTML = cloneParent.innerHTML;
 					}
 					j++;
-				}
-				else{
+				} else{
 					i++;
 					j = 0;
 				}
-			}
-			else {
+			} else {
 				clearInterval(time);
 				return;
 			}
-		}, 100);
+		}, 400);
 	}
-	sort();
+
 })();
