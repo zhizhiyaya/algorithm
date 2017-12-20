@@ -6,6 +6,7 @@
 	position: relative;
 }
 .child {
+	position: absolute;
 	background: #aba6bf;
 	color: #fff;
 	text-align: center;
@@ -16,9 +17,8 @@
 	background: #595775;
 }
 .m-horizontal-wrap .child {
-	display: inline-block;
+	bottom: 0;
 	width: 40px;
-	margin-right: 10px;
 }
 .m-horizontal-wrap .light {
 	background: #595775;
