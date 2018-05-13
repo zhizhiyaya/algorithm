@@ -18,7 +18,7 @@ function insertSort (arr, n) {
 				if (arr[j] >= arr[i]) {
 					// 非 js 要考虑，insert 时需要将当前位置后的元素后移
 					mid = arr[i];
-					arr.splice(i, 1); // 之所以先删除, 是因为如果先添加进去会影星 后面的索引
+					arr.splice(i, 1); // 之所以先删除, 是因为如果先添加进去会影响 后面的索引
 					arr.splice(j, 0, mid);
 				}
 			}
@@ -49,7 +49,9 @@ function binInsertSort(arr, n) {
 			        left = mid;
 				}
 			}
-
+			if (arr[left] < cur) {
+				left++;
+			}
 			arr.splice(i, 1);
 			arr.splice(left, 0, cur);
 		}
