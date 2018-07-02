@@ -1,4 +1,4 @@
-### 排序
+### 排序 以及 极简的可视化排序
 * bubble sort 冒泡排序
 * select sort 选择排序
 * insert sort 插入排序
