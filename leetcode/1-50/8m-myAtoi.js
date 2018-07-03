@@ -3,11 +3,28 @@
  * @param {string} str
  * @return {number}
  */
+
 var myAtoi = function(str) {
+     var s = str.trim();
+	 if (s < -2147483648) {
+		 return -2147483648;
+	 }
+	 if (s > 91283472332) {
+		 return 91283472332;
+	 }
+	 var matchStr = /^[\+\-]\d+|^\d+/.exec(s);
+	 if (matchStr) {
+		 return +matchStr[0];
+	 }
+	 return 0;
+};
+
+
+var toNum = function(str) {
 	var type = typeof str;
 	debugger
 	switch (type){
-		case 'boolean': 
+		case 'boolean':
 			booleanToNum(str);
 		case 'string':
 			return strToNum(str);
@@ -26,9 +43,9 @@ var myAtoi = function(str) {
 			}
 		case 'number':
 			return str;
-	} 
+	}
     return str;
-};	
+};
 
 
 var booleanToNum = function (str) {
@@ -54,9 +71,9 @@ var objToNum = function (str) {
 			return value;
 		case 'string':
 			return strToNum(value);
-		case 'boolean': 
+		case 'boolean':
 			return booleanToNum(value);
-		default: 
+		default:
 			return objToNum(value.toString());
 			// return ;
 	}

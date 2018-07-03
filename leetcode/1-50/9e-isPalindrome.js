@@ -12,7 +12,6 @@ var isPalindrome = function(x) {
         sum = sum * 10 + n % 10;
         n = parseInt(n / 10);
     }
-    console.log(sum);
     return x == sum;
 }
 
@@ -34,7 +33,6 @@ var isPalindrome = function(x) {
         r = mid;
     if (len % 2 === 0) { // 偶数长
         l = mid - 1;
-        r = mid;
     }
     while (l > -1 && r < len) {
         if (s[l] !== s[r]) {
