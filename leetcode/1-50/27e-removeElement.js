@@ -5,28 +5,19 @@
  */
 
  var removeElement = function(nums, val) {
- 	var ret = [];
-	var index = 0;
-	var len = nums.length;
- 	for (var i = 0; i < len; i++) {
- 		if (nums[i] != val) {
- 			ret[index] = nums[i];
-			index++;
- 		}
- 	}
- 	return ret;
+ 	// var reg = //;
  };
- // var removeElement = function(nums, val) {
- //
- // 	var str = nums.join(',') + ',';
- // str = str.replace(eval('/' + val + ',/g'), '');
- // str = str.replace(/,,/g, '');
- // if (str[str.length - 1] === ',') {
- // 	str = str.slice(0, str.length - 1);
- // }
- // nums = str.split(',');
- // 	return nums;
- // };
+ var removeElement = function(nums, val) {
+ 	var str = nums.join(',') + ',';
+	str = str.replace(eval('/' + val + ',{0,1}/g'), '');
+	// str = str.replace(/,,/g, '');
+	if (str[str.length - 1] === ',') {
+		str = str.slice(0, str.length - 1);
+	}
+	nums = str.split(',');
+	nums = nums.map(i => +i);
+	return nums;
+ };
 
 // var removeElement = function(nums, val) {
 // 	for (var i = nums.length; i >= 0; i--) {
