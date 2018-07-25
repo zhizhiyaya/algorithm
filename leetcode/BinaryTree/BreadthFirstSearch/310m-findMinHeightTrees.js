@@ -26,12 +26,15 @@ var findMinHeightTrees = function(n, edges) {
     delLeafs(graph, nodeNum);
     var ret = [];
     for (var key in graph) {
-        ret.push(key);
+        ret.push(+key);
     }
     return ret;
 };
 
 function delLeafs(graph, nodeNum) {
+    if (nodeNum <= 2) {
+        return;
+    }
     var leafs = [];
     for(var key in graph) {
         if (graph[key].length === 1) { // 叶子节点
@@ -52,6 +55,19 @@ function delLeafs(graph, nodeNum) {
         delLeafs(graph, nodeNum);
     }
 }
+/**
+ *
+ *
+ *      1
+ *      |
+ *  2 - 0 - 3    剥去叶子节点---->     0
+ *      |                            |
+ *      4                            4
+ *      |
+ *      5
+ *
+ **/
+
 
 /**
  * @desc 建立一个图g，是一个二维数组，其中g[i]是一个一维数组，保存了i节点可以到达的所有节点。
