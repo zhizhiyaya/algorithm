@@ -2,24 +2,18 @@
  * @param {number[]} height
  * @return {number}
  */
-var maxArea = function(height) {
-	int res=0;
-	int n = h.size();
-	int l=0,r=n-1;
-	while(l<r) {
-		res=max(res,min(h[l],h[r])*(r-l));
-		if (h[l]<h[r]) {
-			int k=l;
-			while(k<r&&h[k]<=h[l])
-			k++;
-			l=k;
-		} else {
-			int k=r;
-			while(k>l&&h[k]<=h[r])
-			k--;
-			r=k;
-		}
-	}
-	return res;
-};
+ var maxArea = function(height) {
+ 	var low = 0;
+     var high = height.length - 1;
+ 	var maxArea = 0;
+ 	while (low < high) {
+ 		maxArea = Math.max(maxArea, (high - low) * Math.min(height[low], height[high]));
+ 		if (height[low] < height[high]) {
+ 			low++;
+ 		} else {
+ 			high--;
+ 		}
+ 	}
+ 	return maxArea;
+ };
 console.log(maxArea([1, 1]));
