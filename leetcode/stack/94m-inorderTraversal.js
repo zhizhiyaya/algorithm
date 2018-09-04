@@ -6,7 +6,7 @@
  * }
  */
 /**
- * @method 中序遍历（前中后）
+ * @method 中序遍历（左根右）
  * @param {TreeNode} root
  * @return {number[]}
  */
@@ -26,7 +26,7 @@ var inorderTraversal = function(root) {
     return ret;
 };
 
-// 1、
+
 //      1
 //     / \
 //    2   5
