@@ -168,12 +168,11 @@ class BinarySortTree {
 
         if(root) {
             let stack = [];
-            while(root || stack.length) {
-                while (root) {
+            while (root || stack.length > 0) {
+                if(root) {
                     stack.push(root);
                     root = root.left;
-                }
-                if (stack.length) {
+                } else {
                     root = stack.pop();
                     this.visit(root);
                     root = root.right;
