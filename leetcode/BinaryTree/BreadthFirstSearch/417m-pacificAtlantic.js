@@ -9,7 +9,6 @@
  * @return {number[][]}
  */
 var pacificAtlantic = function (matrix) {
-    var res = [];
     var m = matrix.length;
     if (m === 0) {
         return [];
@@ -18,6 +17,7 @@ var pacificAtlantic = function (matrix) {
     if (n === 0) {
         return [];
     }
+    var res = [];
     var state = new Array(m);
     var queue = [];
     // 以下的遍历 标记出边界点，并找出贯通 pacific atlantic的点
