@@ -68,21 +68,21 @@ var pacificAtlantic = function (matrix) {
     while (queue.length) {
         var cell = queue.shift();
         for (var i = dirs.length; i--;) {
-            var row = cell[0] + dirs[i][0];
-            var col = cell[1] + dirs[i][1];
-            if (row < 0 || col < 0 || row === m || col === n
-                || matrix[row][col] < matrix[cell[0]][cell[1]] // 该点时高海拔点，则临接点无需再考虑
+            var r = cell[0] + dirs[i][0];
+            var c = cell[1] + dirs[i][1];
+            if (r < 0 || c < 0 || r === m || c === n
+                || matrix[r][c] < matrix[cell[0]][cell[1]] // 该点时高海拔点，则临接点无需再考虑
                 // 临接点海拔不低时并且和该点标记相同时continue；
                 // 不同时，则表明是交界点了，会被置为 3
-                || ((state[cell[0]][cell[1]] | state[row][col]) === state[row][col])
+                || ((state[cell[0]][cell[1]] | state[r][c]) === state[r][c])
             ) {
                 continue;
             }
-            state[row][col] |= state[cell[0]][cell[1]];
-            if (state[row][col] === 3) {
-                res.push([row, col]);
+            state[r][c] |= state[cell[0]][cell[1]];
+            if (state[r][c] === 3) {
+                res.push([r, c]);
             }
-            queue.push([row, col]);
+            queue.push([r, c]);
         }
     }
     return res;
