@@ -1,80 +1,62 @@
 /**
- * @desc 对于当前需要点击的点，我们先判断是不是雷，是的话直接标记X返回即可。
- *          如果不是的话，我们就数该点周围的雷个数，如果周围有雷，则当前点变为雷的个数并返回。如果没有的话，我们再对周围所有的点调用递归函数再点击即可。
+ * @desc 如果点击的是雷点M则将该点变为X然后返回结束扫雷。
+ *          如果点击的不是雷点，则查看其八邻域内是否有雷，
+ *          如果没有雷，则将该节点的值设置为B，
+ *          如果有雷，则将该点的值置为雷的个数。
+ * 优化：根据第一次找周围雷个数的时候，若此时cnt个数为0并且标识是E的位置记录下来，
+ *      那么如果最后雷个数确实为0了的话，我们直接遍历我们保存下来为E的位置递归即可
  * @param {character[][]} board
  * @param {number[]} click
  * @return {character[][]}
  */
-var updateBoard = function(board, click) {
+var updateBoard = function (board, click) {
+    if (!board.length || !board[0].length) {
+        return {};
+    };
     var m = board.length;
     var n = board[0].length;
     var row = click[0];
     var col = click[1];
-    if (board[r][c] === 'M') {
-        board[r][c] = 'X';
+    var cnt = 0;
+    if (board[row][col] === 'M') {
+        board[row][col] = 'X';
     } else {
-        var count = 0;
-        for (var i = -1; i < 2; i++) {
-            for (var j = -1; j < 2; j++) {
-                if (i === 0 && j === 0) continue;
-                var r = row + i, c = col + j;
-                if (r < 0 || r >= m || c < 0 || c < 0 || c >= n) continue;
-                if (board[r][c] == 'M' || board[r][c] == 'X') count++;
+        var neighbors = [];
+        for (var i = -1; i < 2; ++i) { // 遍历八邻位
+            for (var j = -1; j < 2; ++j) {
+                var x = row + i;
+                var y = col + j;
+                if (x < 0 || x >= m || y < 0 || y >= n) {
+                    continue;
+                }
+                if (board[x][y] === 'M') { // 统计雷的个数
+                    ++cnt;
+                } else if (cnt === 0 && board[x][y] === 'E') {
+                    neighbors.unshift([x, y]);
+                }
             }
         }
-        if (count > 0) { // If it is not a 'B', stop further DFS.
-            board[row][col] = (char)(count + '0');
-        }
-        else { // Continue DFS to adjacent cells.
-            board[row][col] = 'B';
-            for (var i = -1; i < 2; i++) {
-                for (var j = -1; j < 2; j++) {
-                    if (i === 0 && j === 0) continue;
-                    var r = row + i, c = col + j;
-                    if (r < 0 || r >= m || c < 0 || c < 0 || c >= n) continue;
-                    if (board[r][c] == 'E') updateBoard(board, [r, c]);
-                }
+        if (cnt > 0) {
+            board[row][col] = cnt + '';
+        } else { // 周围没有雷的点置为 B
+            for (var i = neighbors.length; i--;) {
+                var a = neighbors[i];
+                board[a[0]][a[1]] = 'B';
+                updateBoard(board, a);
             }
         }
     }
     return board;
 };
+var board = [['E', 'E', 'E', 'E', 'E'],
+    ['E', 'E', 'M', 'E', 'E'],
+    ['E', 'E', 'E', 'E', 'E'],
+    ['E', 'E', 'E', 'E', 'E']];
+var click = [3, 0];
+updateBoard(board, click);
 
-
-public char[][] updateBoard(char[][] board, int[] click) {
-    int m = board.length, n = board[0].length;
-    int row = click[0], col = click[1];
-    
-    if (board[row][col] == 'M') { // Mine
-        board[row][col] = 'X';
-    }
-    else { // Empty
-        // Get number of mines first.
-        int count = 0;
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                if (i == 0 && j == 0) continue;
-                int r = row + i, c = col + j;
-                if (r < 0 || r >= m || c < 0 || c < 0 || c >= n) continue;
-                if (board[r][c] == 'M' || board[r][c] == 'X') count++;
-            }
-        }
-        
-        if (count > 0) { // If it is not a 'B', stop further DFS.
-            board[row][col] = (char)(count + '0');
-        }
-        else { // Continue DFS to adjacent cells.
-            board[row][col] = 'B';
-            for (int i = -1; i < 2; i++) {
-                for (int j = -1; j < 2; j++) {
-                    if (i == 0 && j == 0) continue;
-                    int r = row + i, c = col + j;
-                    if (r < 0 || r >= m || c < 0 || c < 0 || c >= n) continue;
-                    if (board[r][c] == 'E') updateBoard(board, new int[] {r, c});
-                }
-            }
-        }
-    }
-    
-    return board;
-}
+// Output:
+// [['B', '1', 'E', '1', 'B'],
+//  ['B', '1', 'M', '1', 'B'],
+//  ['B', '1', '1', '1', 'B'],
+//  ['B', 'B', 'B', 'B', 'B']]
