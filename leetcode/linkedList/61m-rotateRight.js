@@ -6,6 +6,7 @@
  * }
  */
 /**
+ * @desc 分割成两段再拼接
  * @param {ListNode} head
  * @param {number} k
  * @return {ListNode}
