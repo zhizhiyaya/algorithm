@@ -13,24 +13,21 @@
  * @return {ListNode}
  */
 var reverseBetween = function (head, m, n) {
-    if (!head) {
-        return head;
-    }
     var dummy = new ListNode(0);
+    var pre = dummy;
+    var cur;
     dummy.next = head;
-    var pre = dummy, cur = head;
     var k = 1;
-    while (cur.next && k !== m) {
-        cur = cur.next;
+    while (pre.next && k !== m) {
         pre = pre.next;
         k++;
     }
+    cur = pre.next;
     while (cur.next && k !== n) {
-        var preNext = pre.next;
+        var temp = pre.next;
         pre.next = cur.next;
-        var next = cur.next;
-        cur.next = next.next;
-        next.next = preNext;
+        cur.next = cur.next.next;
+        pre.next.next = temp;
         k++;
     }
     return dummy.next;
