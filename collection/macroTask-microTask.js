@@ -17,6 +17,8 @@ console.log(3);
 // macro-task: script（整体代码）, setTimeout, setInterval, setImmediate, I/O, UI rendering
 // micro-task: process.nextTick, Promises（这里指浏览器实现的原生 Promise）, Object.observe, MutationObserver
 
+// MutationObserver监听 DOM 树(childList、attributes、subtree)更改 ,https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver
+
 // 全局代码相当于  macrotask
 // promise 的 excutor 会立即执行
 1
