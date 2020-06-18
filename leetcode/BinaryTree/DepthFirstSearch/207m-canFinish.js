@@ -39,7 +39,7 @@ var canFinish = function(numCourses, prerequisites) {
     }
     var queue = [];
     for (var i = indegree.length - 1; i > -1; i--) {
-        if (!indegree[i]) {
+        if (!indegree[i]) { 
             queue.push(i);
         }
     }
