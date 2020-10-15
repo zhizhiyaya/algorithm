@@ -15,7 +15,7 @@ var removeZeroSumSublists = function(head) {
     var sum = 0;
     for(var pointer = head; pointer != null; pointer = pointer.next){
         sum += pointer.val;
-        map[sum] = pointer;
+        map[sum] = pointer; // sum 出现相同的，后面的pointer 会覆盖掉前面的
     }
     
     sum = 0;
@@ -23,7 +23,8 @@ var removeZeroSumSublists = function(head) {
         sum+= pointer.val;
         var node = map[sum];
         if(sum == 0) head = node.next;
-        if(node != pointer) pointer.next = node.next;
+        // 因为map[sum] 存在覆盖，而覆盖 是因为不同节点下sum为 0导致的，所以 节点不同时 则节点之间的节点和为 0，则修改next 把中间和为0 的去掉即可 
+        if(node != pointer) pointer.next = node.next; // 关键的这步，
     }
     return head;
 };
