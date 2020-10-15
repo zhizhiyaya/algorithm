@@ -6,7 +6,8 @@
  * }
  */
 /**
- * @desc 最近一个比cur 大的值替换cur,否则0
+ * @desc 给出了一个单链表，找到每个节点的后面 第一个比它大的元素，如果不存在，那么放0. 
+ *       最近一个比cur 大的值替换cur,否则0
  * @param {ListNode} head
  * @return {number[]}
  */
