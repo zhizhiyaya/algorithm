@@ -60,6 +60,7 @@ str.replace(reg, ($0, $1) => {
 
 // https://devarchy.com/react/library/react-redux-provide?aa=aaa#hash?bb=bb
 var reg = /(?=\?)[^\?\#]+/g;
+var reg = /\w+=[^&#]*/g;
 location.href.match(reg)
 // ["?aa=aaa", "?bb=bb"]
 
@@ -92,3 +93,6 @@ location.href.match(reg)
     aa: [ 1, 2, { bb: 'cc' } ]
 };
 console.log(getValueForKeys( obj,  ['a.b.c',  'aa[2].bb']));
+
+// 中文
+// [^\u0000-\u00FF]
