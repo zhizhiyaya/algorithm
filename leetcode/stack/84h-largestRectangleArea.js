@@ -1,6 +1,6 @@
 /**
  * @method 求最大矩形面积
- * @desc 左右两个下标，以当前遍历到的数值为基准，向外扩展，包含当前值的符合条件
+ * @desc 以当前遍历到的数值为 高 ，向外扩展为 宽，高>当前值 则符合条件 宽+1
  * @param {number[]} heights
  * @return {number}
  */
@@ -24,7 +24,6 @@ var largestRectangleArea = function(heights) {
     }
     return ret;
 };
-
 //       |*|
 //       |*|*|
 //   |*| |*|*|
