@@ -3,8 +3,29 @@
  * @param {Array} arr 数组
  * @return {Array} arr
  **/
-function flattenArr(arr, temp) {
+function flattenArr(arr) {
+	return arr.reduce((a, cur) => {
+		return a.concat(Array.isArray(cur) ? flattenArr(cur) : cur);
+	}, []);
+}
 
+function* iterTree(tree) {
+	if (Array.isArray(tree)) {
+		for(let i=0; i < tree.length; i++) {
+			yield* iterTree(tree[i]); // 还是递归了
+		}
+	} else {
+		yield tree;
+	}
+}
+
+function flattenArr() {
+	return [...iterTree(arr)];
+}
+
+
+function flattenArr(arr, temp) {
+	var temp = arguments[1] || [];
 	for (var i = 0, len = arr.length; i < len; i++) {
 		if (Array.isArray(arr[i])) {
 			flattenArr(arr[i], temp);
@@ -13,25 +34,8 @@ function flattenArr(arr, temp) {
 		}
 	}
 	return temp;
-
-	// for (var i = arr.length - 1; i >= 0; i--) {
-	// 	if (Array.isArray(arr[i])) {
-	// 		flattenArr(arr[i]);
-	// 	} else {
-	// 		a.push(arr[i])
-	// 	}
-	// }
-	// return temp;
-
-	// return arr.reduce((a, b) => {
-	// 	[].concat(
-	// 		Array.isArray(a) && a ? flattenArr(a) : a,
-	// 		Array.isArray(b) && b ? flattenArr(b) : b,
-	// 		[]);
-	// });
-
-	// return [].concat(...arr);
-	// return Array.prototype.concat.apply([], arr);
 }
 
-console.log(flattenArr(['c', ['a', 'b', ['a', 'b', ['a', 'b', ['a', 'b', ]]]]], []));
+var arr = ['c', ['a', 'b', ['a', 'b', ['a', 'b', ['a', 'b', ]]]]];
+flattenArr(arr, []);
+// ["c", "a", "b", "a", "b", "a", "b", "a", "b"]
