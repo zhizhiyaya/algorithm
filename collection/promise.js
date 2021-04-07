@@ -4,6 +4,7 @@
  *
  *
  **/
+var global = window;
 
 // ES5 基于原型的实现
 function Promise(executor) {
@@ -11,9 +12,103 @@ function Promise(executor) {
     this.queue = [];
     this.isPromise = true;
     this.parentPromise = null;
+    this.fulfilledRes = undefined;
+    this.rejectedRes = undefined;
     if (isFunction(executor)) {
-        executor.call(this, this.resolve, this.reject);
+        this.executor(executor); // 解决箭头函数的 this 指向
     }
+}
+var fn = Promise.prototype;
+fn.executor = function(exec) {
+    exec(this.resolve.bind(this), this.reject.bind(this));
+}
+fn.setFinalStatus = function setFinalStatus(status) {
+    var rootPromise = this;
+    while (rootPromise.parentPromise) {
+        rootPromise = rootPromise.parentPromise;
+    }
+    this.status = status;
+    rootPromise.status = status;
+
+    return rootPromise;
+}
+
+fn.resolve = function resolve() {
+    var next,
+        args,
+        fulfilledRes;
+    fulfilledRes = Array.prototype.slice.call(arguments);
+    next = this.queue.shift();
+    if (next && this.status === 'pending') {
+        onFulfilled = next.onFulfilled;
+        args = fulfilledRes.concat(this);
+        fulfilledRes = onFulfilled.apply(global, args);
+
+        if (fulfilledRes && fulfilledRes.isPromise) {
+            fulfilledRes.queue = args.queue.concat(this.queue);
+            fulfilledRes.parentPromise = this; 
+        }
+        else {
+            this.fulfilledRes = fulfilledRes;
+            this.resolve(fulfilledRes);
+        }
+    }
+    else if (!next) {
+        this.fulfilledRes = fulfilledRes;
+        this.setFinalStatus("fulfilled");
+    } else {
+        console.log('this promise has been resolved/rejected!');
+    }
+};
+
+fn.reject = function resolve() {
+    var next,
+        args,
+        rejectedRes;
+    rejectedRes = Array.prototype.slice.call(arguments);
+    next = this.queue.shift();
+    if (this.status === 'pending') {
+        if (next && next.onRejected) {
+            args = rejectedRes.concat(this);
+            rejectedRes = next.onRejected(args);
+            this.rejectedRes = rejectedRes;
+            if (this.queue.length === 0) {
+                this.setFinalStatus('rejected');
+                return rejectedRes || this;
+            }
+        }
+        return this.resolve(rejectedRes);
+    } else {
+        console.log('this promise has been resolved/rejected!');
+    }
+    
+};
+
+fn.then = function then(onFulfilled, onRejected) {
+    var isFnForDone = isFunction(onFulfilled);
+    var isFnForFail = isFunction(onRejected);
+    if (isFnForDone || isFnForFail) {
+        switch (this.status) {
+            case 'pending':
+                this.queue.push({
+                    onFulfilled,
+                    onRejected
+                });
+                break;
+            case 'fulfilled':
+                isFnForDone && onFulfilled(this.fulfilledRes);
+                break;
+            case 'rejected':
+                isFnForFail && onRejected(this.rejectedRes);
+                break;
+            default:
+                break;
+        }
+    }
+    return this;
+}
+fn.catch = function catchExcep(onRejected) {
+    this.then(null, onRejected);
 }
 Promise.allSettled = Promise.allSettled || function (promises) {
     return new Promise(resolve => {
@@ -40,98 +135,13 @@ Promise.allSettled = Promise.allSettled || function (promises) {
         }
     });
 }
-
-var fn = Promise.prototype;
-
-fn.setFinalStatus = function setFinalStatus(status) {
-    var rootPromise = this;
-    while (rootPromise.parentPromise) {
-        rootPromise = rootPromise.parentPromise;
-    }
-    this.status = status;
-    rootPromise.status = status;
-
-    return rootPromise;
-}
-
-fn.then = function then(onFulfilled, onRejected) {
-    var isFnForDone = isFunction(onFulfilled);
-    var isFnForFail = isFunction(onRejected);
-    if (isFnForDone || isFnForFail) {
-        switch (this.status) {
-            case 'pending':
-                this.queue.push({
-                    onFulfilled,
-                    onRejected
-                });
-                break;
-            case 'fulfilled':
-                isFnForDone && onFulfilled();
-                break;
-            case 'rejected':
-                isFnForFail && onRejected();
-                break;
-            default:
-                break;
-        }
-    }
-    return this;
-}
-
-fn.resolve = function resolve() {
-    var next,
-        args,
-        fulfilledRes;
-    if (next && this.status === 'pending') {
-
-        onFulfilled = next.onFulfilled;
-        args = Array.prototype.slice.call(arguments).concat(this);
-        fulfilledRes = onFulfilled.apply(global, args);
-
-        if (fulfilledRes && fulfilledRes.isPromise) {
-            fulfilledRes.queue = args.queue.concat(this.queue);
-            fulfilledRes.parentPromise = this; 
-        }
-        else {
-            this.resolve(fulfilledRes);
-        }
-    }
-    else if (!next) {
-        this._setFinalStatus("fulfilled");
-    } else {
-        console.log('this promise has been resolved/rejected!');
-    }
-};
-
-fn.reject = function resolve() {
-    var next,
-        args,
-        rejectRes;
-    next = this.queue.shift();
-    if (this.status === 'pending') {
-        if (next && next.onRejected) {
-            args = Array.prototype.slice.call(arguments).concat(this);
-            rejectRes = next.onRejected(args);
-            if (this.queue.length === 0) {
-                this.setFinalStatus('rejected');
-                return rejectRes || this;
-            }
-        }
-        return this.resolve(rejectRes);
-    } else {
-        console.log('this promise has been resolved/rejected!');
-    }
-    
-};
-
 function toString(obj) {
 	return Object.prototype.toString.call(obj);
 }
 
 function isFunction(obj) {
-	return toString(obj) === 'object Function';
+	return toString(obj) === '[object Function]';
 }
-
 
 new Promise(function(resolve, reject){
     resolve({});
