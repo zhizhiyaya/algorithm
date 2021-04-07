@@ -15,6 +15,31 @@ function Promise(executor) {
         executor.call(this, this.resolve, this.reject);
     }
 }
+Promise.allSettled = Promise.allSettled || function (promises) {
+    return new Promise(resolve => {
+        const data = [], len = promises.length;
+        let count = len;
+        for (let i = 0; i < len; i += 1) {
+            const promise = promises[i];
+            if (promise.isPromise) {
+                promise.then(res => {
+                    data[i] = { status: 'fulfilled', value: res };
+                }, error => {
+                    data[i] = { status: 'rejected', reason: error };
+                }).finally(() => { // promise has been settled
+                    if (!--count) {
+                        resolve(data);
+                    }
+                });
+            } else {
+                if (!--count) {
+                    data[i] = { status: 'fulfilled', value: res };
+                    resolve(data);
+                }
+            }
+        }
+    });
+}
 
 var fn = Promise.prototype;
 
@@ -41,10 +66,10 @@ fn.then = function then(onFulfilled, onRejected) {
                 });
                 break;
             case 'fulfilled':
-                onFulfilled();
+                isFnForDone && onFulfilled();
                 break;
             case 'rejected':
-                onRejected();
+                isFnForFail && onRejected();
                 break;
             default:
                 break;
@@ -55,26 +80,24 @@ fn.then = function then(onFulfilled, onRejected) {
 
 fn.resolve = function resolve() {
     var next,
-        nextDone,
-        args
-        ret;
-    args = Array.prototype.slice.call(arguments).concat(this);
-    if (this.status === 'pending') {
-        next = this.queue.shift();
-        while(next && next.onFulfilled) {
-            try {
-                args = next.onFulfilled(args);
-                if (args && args.isPromise) {
-                    args.queue = args.queue.concat(this.queue);
-                    args.parentPromise = this; 
-                    return;
-                }
-            } catch(e) {
-                this.reject(e);
-            }
-            next = this.queue.shift();
+        args,
+        fulfilledRes;
+    if (next && this.status === 'pending') {
+
+        onFulfilled = next.onFulfilled;
+        args = Array.prototype.slice.call(arguments).concat(this);
+        fulfilledRes = onFulfilled.apply(global, args);
+
+        if (fulfilledRes && fulfilledRes.isPromise) {
+            fulfilledRes.queue = args.queue.concat(this.queue);
+            fulfilledRes.parentPromise = this; 
         }
-        this.status = 'fulfilled';
+        else {
+            this.resolve(fulfilledRes);
+        }
+    }
+    else if (!next) {
+        this._setFinalStatus("fulfilled");
     } else {
         console.log('this promise has been resolved/rejected!');
     }
@@ -82,15 +105,23 @@ fn.resolve = function resolve() {
 
 fn.reject = function resolve() {
     var next,
-        args;
+        args,
+        rejectRes;
     next = this.queue.shift();
-    if (next && next.onRejected) {
-        args = Array.prototype.slice.call(arguments).concat(this);
-        next.onRejected(args);
+    if (this.status === 'pending') {
+        if (next && next.onRejected) {
+            args = Array.prototype.slice.call(arguments).concat(this);
+            rejectRes = next.onRejected(args);
+            if (this.queue.length === 0) {
+                this.setFinalStatus('rejected');
+                return rejectRes || this;
+            }
+        }
+        return this.resolve(rejectRes);
+    } else {
+        console.log('this promise has been resolved/rejected!');
     }
-    this.queue = [];
-    rootPromise = this.setFinalStatus('rejected');
-    rootPromise && (rootPromise.queue = []);
+    
 };
 
 function toString(obj) {
@@ -102,6 +133,73 @@ function isFunction(obj) {
 }
 
 
+new Promise(function(resolve, reject){
+    resolve({});
+    // reject({});
+}).then((r)=>{
+    console.log(this, r);
+}, (e) => {
+    console.log('this', e);
+}).catch(e=>{
+    console.log('this, e');
+})
+
+new Promise((resolve, reject) => {
+    reject({});
+    console.log(1)
+}).then((r)=>{
+    console.log(2)
+}, e=>{
+    console.log(3)
+}).then((r)=>{
+    console.log(22)
+}, e=>{
+    console.log(33)
+})
+
+// Promise {<fulfilled></fulfilled>
+// 1
+// 3333 handleRejected 
+// 222222
+new Promise((resolve, reject) => {
+    reject({});
+    console.log(1)
+}).then((r)=>{
+    console.log(2)
+}).then((r)=>{
+    console.log(22)
+}, e => {
+    console.log(3333)
+}).then((r)=>{
+    console.log(222222)
+}, e => {
+    console.log(33333333)
+}).catch(e => {
+    console.log(33)
+})
+
+new Promise((resolve, reject) => {
+    throw new Error({});
+    reject({});
+    console.log(1)
+}).then((r)=>{
+    console.log(222222)
+    return r;
+}, e => {
+    console.log(33333333)
+    throw new Error({});
+})
+ // 以 throw 终止则会创建一个"已拒绝" rejected 状态 , 没这行 则是 fulfilled 状态
+
+var pro1 = new Promise((resolve, reject) => {
+    // throw new Error({});
+    resolve({});
+    console.log(1)
+}).then(async (r)=>{
+    return await new Promise(() => {}); // pro1 会一直pending, 因为pro1 已变成当前 then 方法里这个返回的 promise 对象
+}, e => {
+    console.log(33333333)
+})
 
 // var a = new Promise((resolve, reject) => {
 //     console.log(111);
