@@ -22,10 +22,10 @@ function triggerEvents(events, args) {
 }
 
 var CustEvent = {
-	on: function(name, callback, context) {
-		this.events = this.events || {};
-		this.events[name] = this.events[name] || [];
-		var events = this.events[name];
+	events: {},
+	on: function(event, callback, context) {
+		this.events[event] = this.events[event] || [];
+		var events = this.events[event];
 		events.push({
 			callback: callback,
 			context: context,
@@ -33,31 +33,31 @@ var CustEvent = {
 		});
 		return this;
 	},
-	once: function(name, callback, context) {
+	once: function(event, callback, context) {
 		var me = this;
-		var _once = once(function() {
-			self.off(name, _once);
-			callback.apply(this, arguments);
-		});
-		once._callback = callback;
-		return this.on(name, once, context);
+		function on () {
+			me.off(event, on);
+			callback.apply(me, arguments)
+		}
+		on.callback = callback
+		return this.on(event, on, context);
 	},
-	off: function(name, callback, context) {
+	off: function(event, callback, context) {
 		if (!this.events) return this;
 		var retain,
 			evt,
 			events,
-			names,
+			events,
 			i, l, j, k;
-		if (!name && !callback && !context) {
+		if (!event && !callback && !context) {
 			this.events = null;
 			return this;
 		}
-		names = name ? [name] : Object.keys(this.events);
-		names.forEach((name, index) => {
-			events = this.events[name];
+		events = event ? [event] : Object.keys(this.events);
+		events.forEach((event, index) => {
+			events = this.events[event];
 			if (events) {
-				this.events[name] = retain = [];
+				this.events[event] = retain = [];
 				if (callback || context) {
 					events.forEach(() => {
 						evt = events[j];
@@ -69,15 +69,15 @@ var CustEvent = {
 						}
 					});
 				}
-				if (!retain.length) delete this.events[name];
+				if (!retain.length) delete this.events[event];
 			}
 		});
 		return this;
 	},
-	trigger: function(name) {
+	trigger: function(event) {
 		if (!this.events) return this;
 		var args = Array.prototype.slice.call(arguments, 1),
-			events = this.events[name],
+			events = this.events[event],
 			allEvents = this.events.all,
 			ret = 1;
 		if (events) {
