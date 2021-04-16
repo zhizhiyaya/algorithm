@@ -44,7 +44,7 @@ function binInsertSort(arr, n) {
             while (left < right) {
                 mid = parseInt((left + right) / 2, 10);
                 if (arr[mid] > cur) {
-                    right = mid - 1;
+                    right = mid;
                 } else {
                     left = mid;
                 }
@@ -58,3 +58,55 @@ function binInsertSort(arr, n) {
     }
     return arr;
 }
+
+/**
+ * 同 二分排序，
+ * 从无序数列 选取 k 个最小数
+ * in: [4,5,1,6,2,7,3,8], 4
+ * out : [1, 2, 3, 4]
+ */
+function GetLeastNumbers_Solution(input, k) {
+    if (k > input.length || k === 0) {
+        return [];
+    }
+    var res = new Array(); 
+    var length = input.length;
+    for (var i =  length; i--; ) {
+        var resLength = res.length;
+        // 判断提前，否则就移到 insert里检查
+        if (input[i] < res[0]) {
+            res.unshift(input[i]);
+            if (res.length > k) {
+                res.pop();
+            }
+        } else if (input[i] > res[resLength - 1]) {
+            if (resLength < k) {
+                res.push(input[i]);
+            }
+        } else {
+            insert(res, k, input[i]);
+        }
+    }
+    return res;
+}
+function insert(arr, k, num) {
+    var length = arr.length;
+    var h = length - 1;
+    var l = 0;
+    var mid = Math.floor((l + h) / 2, 10);;
+    // 2 3 7 8 , 6
+    while(l < h && mid !== l && mid !==h) {
+        if (num < arr[mid]) {
+            h = mid;
+        } else if (num > arr[mid]) {
+            l = mid;
+        }
+        mid = Math.floor((l + h) / 2, 10);
+    }
+    if (arr[l] < num) {
+        l++;
+    }
+    arr.splice(l, length < k ? 0 : 1, num);
+}
+var a = [4,5,1,6,2,7,3,8];
+GetLeastNumbers_Solution(a, 4)
