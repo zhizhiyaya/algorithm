@@ -1,4 +1,35 @@
 /**
+ * @desc 节流、防抖函数属于性能优化方案，解决高频率触发事件带来的资源浪费问题
+ * @desc 对于想控制一些触发频率较高的事件有帮助。（注：详见：javascript函数的throttle和debounce）
+ */
+// 防抖，输入框类，输入过快，限制请求数，避免多次请求频繁渲染页面 带来视觉抖动
+function debounce(fn, waitTime) {
+    let timer = null;
+    var that = this;
+    return function(...args) {
+        if(timer) { // 有 timer,清除 再新起 settimeout，持续等待
+            clearTimeout(timer)
+        }
+        timer = setTimeout(()=>{
+            fn.apply(that, args)
+        }, waitTime)
+    }
+}
+// 节流，resize、scroll 类，每隔一段时间执行一次fn
+function throttle(fn, waitTime) {
+    let timer = null;
+    let me = this;
+    return function(...args) {
+        if (timer) { return; } // 有 timer, 直接 return，每隔一段时间触发一次
+        timer = setTimeout(function() {
+            fn.apply(me, args);
+            timer = null;
+        }, waitTime);
+    };
+};
+
+
+/**
  * @desc 创建并返回一个像节流阀一样的函数，当重复调用函数的时候，最多每隔 wait毫秒调用一次该函数。
  * @desc 对于想控制一些触发频率较高的事件有帮助。（注：详见：javascript函数的throttle和debounce）
  * @param {Object} options
