@@ -35,7 +35,11 @@ function flattenArr(arr, temp) {
 	}
 	return temp;
 }
-
+// 浅拷贝
+// function flattenArr(arr) {
+	// return [].concat(...arr);
+	// return Array.prototype.concat.apply([], arr);
+// }
 var arr = ['c', ['a', 'b', ['a', 'b', ['a', 'b', ['a', 'b', ]]]]];
 flattenArr(arr, []);
 // ["c", "a", "b", "a", "b", "a", "b", "a", "b"]
