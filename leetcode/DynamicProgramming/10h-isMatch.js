@@ -10,9 +10,9 @@
 
  * 3. p[j]  === "*":
  * 　　3.1 p[j-1]  !==  s[i]:　　dp[i][j] = dp[i][j-2]
- * 　　3.2 p[i-1]  ===  s[i] or p[i-1]  ===  ".":
- * 　　　　dp[i][j] = dp[i-1][j] // 多个a的情况
- * 　　　　or dp[i][j] = dp[i][j-1] // 单个a的情况
+ * 　　3.2 p[j-1]  ===  s[i] or p[j-1]  ===  ".":
+ * 　　　　dp[i][j] = dp[i-1][j]    // 多个a的情况  s = abcd, p = .* p[j-1]  ===  "."
+ * 　　　　or dp[i][j] = dp[i][j-1] // 单个a的情况  s = abcd, p = a* p[j-1]  ===  s[i]
  * 　　　　or dp[i][j] = dp[i][j-2] // 没有a的情况} s 
  */
  var isMatch = function(s, p) {
