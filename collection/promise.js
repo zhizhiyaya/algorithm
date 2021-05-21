@@ -11,7 +11,6 @@ function Promise(executor) {
     this.status = 'pending';
     this.queue = [];
     this.isPromise = true;
-    this.parentPromise = null;
     this.fulfilledRes = undefined;
     this.rejectedRes = undefined;
     if (isFunction(executor)) {
@@ -23,14 +22,8 @@ fn.executor = function(exec) {
     exec(this.resolve.bind(this), this.reject.bind(this));
 }
 fn.setFinalStatus = function setFinalStatus(status) {
-    var rootPromise = this;
-    while (rootPromise.parentPromise) {
-        rootPromise = rootPromise.parentPromise;
-    }
     this.status = status;
-    rootPromise.status = status;
-
-    return rootPromise;
+    return this;
 }
 
 fn.resolve = function resolve() {
@@ -45,8 +38,11 @@ fn.resolve = function resolve() {
         fulfilledRes = onFulfilled.apply(global, args);
 
         if (fulfilledRes && fulfilledRes.isPromise) {
-            fulfilledRes.queue = args.queue.concat(this.queue);
-            fulfilledRes.parentPromise = this; 
+            fulfilledRes.then((res) => {
+                this.resolve(res);
+            }, (e) => {
+                this.reject(e);
+            });
         }
         else {
             this.fulfilledRes = fulfilledRes;
