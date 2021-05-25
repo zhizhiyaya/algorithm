@@ -44,7 +44,10 @@ execReg(reg, str);
 reg = /cainiao(?=8)/;
 str = 'cainiao8';
 // return cainiao , 匹配
-
+function toThousands(num) {
+    return (num || 0).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+}
+toThousands(12345677890); // "1,234,567,890"
 
 // $0 是匹配到的整个串， $1 是匹配到的 第一个子表达式
 reg = /-(\w)/g;
