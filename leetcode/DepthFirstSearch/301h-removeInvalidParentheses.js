@@ -1,39 +1,35 @@
 /**
+ * @desc 返回最长的合法字符串，剔除最短的（ 、）
  * @param {string} s
  * @return {string[]}
  */
 function removeInvalidParentheses(s) {
     var res = [];
-    // sanity check
     if (s == null) return res;
     var visited = [];
     var queue = [];
 
-    // initialize
     queue.push(s);
     visited.push(s);
 
     var found = false;
     while (queue.length) {
         s = queue.shift();
-
         if (isValid(s)) {
-            // found an answer, add to the result
+            // s 的（）是合法的
             res.push(s);
             found = true;
         }
-        // 有最长的，就不需要再分割去找子串了
+        // 有合法的 即是最长的（因为是依次删除 （）来的），就不需要再分割去找子串了
         if (found) continue;
 
-        // generate all possible states
+        // 对非法的串 进行删减 （） 然后再到 while 判断是否合法
         for (var i = 0; i < s.length; i++) {
             // we only try to remove left or right paren
             if (s.charAt(i) != '(' && s.charAt(i) != ')') continue;
-
+            // 删减 （ 或 ）生成新串
             var t = s.substring(0, i) + s.substring(i + 1);
-
-            if (visited.indexOf(t) === -1) {
-                // for each state, if it's not visited, add it to the queue
+            if (visited.indexOf(t) === -1) { // 新生成的串 跟之前的串不重合
                 queue.push(t);
                 visited.push(t);
             }
@@ -42,7 +38,7 @@ function removeInvalidParentheses(s) {
     return res;
 }
 
-// helper function checks if string s contains valid parantheses
+// 左（就++ ，右 ）-- , 最终数值一致则合法，否则中间则会校验出不合法
 function isValid(s) {
     var count = 0;
     for (var i = 0; i < s.length; i++) {
