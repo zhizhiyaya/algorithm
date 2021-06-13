@@ -29,6 +29,7 @@ var uniquePathsIII = function(grid) {
     return 0;
 };
 function dfs(grid, x, y, visitCount) {
+    // grid[x][y] < 0 表示已经走过。
     if (x < 0 || x >= grid.length || y < 0 || y >= grid[0].length || grid[x][y] < 0)
         return 0;
     if (grid[x][y] == 2) {
