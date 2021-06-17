@@ -26,7 +26,25 @@ var inorderTraversal = function(root) {
     return ret;
 };
 
-
+var root = {
+	val: 1,
+	left: {
+		val: 2,
+		left: {
+			val: 3,
+		},
+		right: {
+			val: 4,
+		}
+	},
+	right: {
+		val: 5,
+		right: {
+			val: 6,
+		}
+	}
+};
+inorderTraversal(root)
 //      1
 //     / \
 //    2   5
