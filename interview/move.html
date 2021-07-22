@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    .slider {
+        width: 100px;
+        height: 100px;
+        background-color: bisque;
+    }
+</style>
+</head>
+<body>
+    <div class="slider"></div>
+    <script>
+        var el = document.querySelector(".slider");
+        var clientX = el.offsetLeft;
+        var prev = {};
+        var cur = {};
+        var transX = 0;
+        function startup() {
+            el.addEventListener("touchstart", handleStart, false);
+            el.addEventListener("touchend", handleEnd, false);
+            el.addEventListener("touchcancel", handleCancel, false);
+            el.addEventListener("touchmove", handleMove, false);
+        }
+
+        document.addEventListener("DOMContentLoaded", startup);
+        function handleStart(e) {
+            var touches = e.targetTouches && e.targetTouches[0];
+            prev = touches;
+            var matrix = document.defaultView.getComputedStyle(el, null).transform;
+            transX = new WebKitCSSMatrix(matrix).e;
+        }
+        function handleEnd(e) {
+            console.log(e)
+        }
+        function handleMove(e) {
+            var touches = e.targetTouches && e.targetTouches[0];
+            cur = touches;
+            var xSpace = transX + cur.clientX - prev.clientX;
+            // prev = cur;
+            el.style.transform = `translate3d(${xSpace}px, 0, 0)`;
+        }
+        function handleCancel(e) {
+            console.log(e)
+        }
+        
+    </script>    
+</body>
+</html>
