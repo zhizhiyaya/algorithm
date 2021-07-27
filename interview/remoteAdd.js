@@ -4,51 +4,35 @@ const remoteAdd = (a, b) => new Promise((resolve) => {
     }, 10)
 });
 
-// function localAdd(...inputs) {
-//     return new Promise(async (resolve) => {
-//         let l = 0;
-//         let r = inputs.length - 1;
-//         let sum = 0;
-//         let a = 0;
-//         let b = 0;
-//         while ( r >= l) {
-//             a = inputs[l];
-//             b = r === l ? 0 : inputs[r];
-//             await remoteAdd(a, b).then(s => {
-//                 sum += s;
-//                 r--;
-//                 l++;
-//             })
-//         }
-//         resolve(sum);
-//     });
-// }
-
 function localAdd(...inputs) {
     return new Promise(async (resolve) => {
         let l = 0;
         let r = inputs.length - 1;
-        let sum = 0;
+        let newArr = [];
         let a = 0;
         let b = 0;
-        while ( r > l) {
+        while (r > l) {
             a = inputs[l];
             b = r === l ? 0 : inputs[r];
             await remoteAdd(a, b).then(s => {
-                sum += s;
+                newArr.push(s);
                 r--;
                 l++;
+                if (r === l || r < l) {
+                    r === l && newArr.push(inputs[l]);
+                    if (newArr.length > 1) {
+                        inputs = newArr;
+                        newArr = [];
+                        l = 0;
+                        r = inputs.length - 1;
+                    }
+                }
             })
         }
-        if (r === l) {
-            await remoteAdd(sum, inputs[l]).then(s => {
-                sum = s;
-            })
-        }
-        resolve(sum);
+        resolve(newArr[0]);
     });
 }
 
-localAdd(2, 3, 4).then(sum => {
+localAdd(2, 3, 4, 5).then(sum => {
     console.log(sum);
 });
