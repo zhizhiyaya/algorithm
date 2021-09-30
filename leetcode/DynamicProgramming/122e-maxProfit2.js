@@ -3,6 +3,17 @@
  * @param {number[]} prices
  * @return {number}
  */
+ var maxProfit = function(prices) {
+    var prev = Number.MAX_VALUE;
+    var profit = 0;
+    prices.reduce((prev, i) => {
+        if (prev < i) {
+            profit += i - prev;
+        }
+        return i;
+    }, prev);
+    return profit;
+};
 var maxProfit = function(prices) {
     let max = 0;
     const length = prices.length;

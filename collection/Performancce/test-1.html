@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body >
+    <!-- async / defer test -->
+    <div class="a"></div>
+    <!-- <script src="./defer-async.js"></script> -->
+    <script defer src="./defer-async.js"></script>
+    <!-- <script async src="./defer-async.js"></script> -->
+    <!-- <script defer>
+        var a = document.querySelector('.a');
+        var b = document.querySelector('.b');
+        console.log(a ,b);
+    </script> -->
+    <div class="b"></div>
+    <script async>
+        var c = document.querySelector('.c');
+        var b = document.querySelector('.b');
+        console.log(c ,b);
+    </script>
+    <script async src="./defer-async.js"></script>
+    <div class="c"></div>
+    <script>
+        console.log(11);
+    </script>
+    <!-- async / defer test -->
+
+
+    <!-- EventLoop test -->
+    
+    <!-- EventLoop test -->
+
+</body>
+</html>
