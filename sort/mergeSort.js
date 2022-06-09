@@ -58,3 +58,15 @@ function mergeSort(a, n) {
     _mergeSort(a, 0, n - 1, []);
 	return a;
 }
+
+
+if (true) {
+    function test() {
+        alert(1)
+    }
+} else {
+    function test() {
+        alert(2)
+    }
+}
+test()

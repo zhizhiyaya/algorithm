@@ -29,12 +29,12 @@ function insertSort (arr, n) {
 // js 中就不用担心数组后移操作，因为数组有一个方法 arr.splice(start,0,num)即可直接将插入的数放进去,
 
 // 二分插入排序，优化的是 有序区的查找
-function binInsertSort(arr, n) {
+function binInsertSort(arr) {
     var cur = null;
     var left = 0;
     var right = 0;
     var mid = 0;
-    n = n || arr.length;
+    var n = arr.length;
 
     for (var i = 1; i < n; i++) {
         cur = arr[i];
@@ -42,11 +42,11 @@ function binInsertSort(arr, n) {
             left = 0;
             right = i - 1;
             while (left < right) {
-                mid = parseInt((left + right) / 2, 10);
+                mid = left + parseInt((right - left) / 2, 10);
                 if (arr[mid] > cur) {
-                    right = mid;
+                    right = mid - 1;
                 } else {
-                    left = mid;
+                    left = mid + 1;
                 }
             }
             if (arr[left] < cur) {

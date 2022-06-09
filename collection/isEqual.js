@@ -5,6 +5,28 @@
 //  * @return Boolean 是否相等的变量
 //  * Tips: 考虑尽可能多的情况
 //  */
+function isObjectEqual (a = {}, b = {}) {
+	// handle null value #1566
+	if (!a || !b) return a === b
+	const aKeys = Object.keys(a).sort()
+	const bKeys = Object.keys(b).sort()
+	if (aKeys.length !== bKeys.length) {
+	  	return false
+	}
+	return aKeys.every((key, i) => {
+		const aVal = a[key]
+		const bKey = bKeys[i]
+		if (bKey !== key) return false
+		const bVal = b[key]
+		// query values can be null and undefined
+		if (aVal == null || bVal == null) return aVal === bVal
+		// check nested equality
+		if (typeof aVal === 'object' && typeof bVal === 'object') {
+			return isObjectEqual(aVal, bVal)
+		}
+		return String(aVal) === String(bVal)
+	})
+}
 
 var eq = function(a, b) {
 
