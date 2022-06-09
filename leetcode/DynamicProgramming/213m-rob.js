@@ -1,4 +1,5 @@
 /**
+ * @desc All houses at this place are arranged in a circle.
  * @param {number[]} nums
  * @return {number}
  */
@@ -10,7 +11,7 @@ var rob = function(nums) {
     if (nums.length <= 1) {
         return nums[0];
     }
-    // 避免首尾加和
+    // 避免首尾加和，Math.max(0～length-1，1 ~ length)
     return Math.max(_rob(nums.slice(0, length - 1)), _rob(nums.slice(1, length)));
 };
 // 完全 198 的解法
@@ -25,11 +26,11 @@ var _rob = function(nums) {
     return Math.max(dp[0], dp[1]);
 };
 
-[2, 1, 1, 2]
-[
-    [0, 0],
-    [2, 0], // 偷 num[0],
-    [1, 2], // 偷 num[1],不偷价值为 2
-    [3, 2], // 偷 num[2],不偷价值为 num[2]之前的最大值 2
-    [4, 3]  // 偷 num[3],不偷价值为 2
-]
+// [2, 1, 1, 2]
+// [
+//     [0, 0],
+//     [2, 0], // 偷 num[0],
+//     [1, 2], // 偷 num[1],不偷价值为 2
+//     [3, 2], // 偷 num[2],不偷价值为 num[2]之前的最大值 2
+//     [4, 3]  // 偷 num[3],不偷价值为 2
+// ]
