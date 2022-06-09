@@ -23,8 +23,15 @@ function curry(add, n) {
    }
 }
 var sum = curry(add, 4);
+function add() {
 
-sum(4)(3)(2)(1)  // 10
+}
+add(1)
+add(1)(2)
+add(1, 2, 3)(1)
+sum(4)(3)(2)(1) 
+ // 10
+
 
 function curry(add) {
     var arr = [];
@@ -60,3 +67,16 @@ var curriedAdd2 = curry(add, 5, 12);
 
 alert(curriedAdd(3))    // 8
 alert(curriedAdd2())    // 17
+
+
+
+// 设计function add() {}
+
+
+add(2, 3, 4) // 9
+
+add(2, 3)(4) // 9
+
+add(2)(3, 4) // 9
+
+add(2)(3)(4) // 9

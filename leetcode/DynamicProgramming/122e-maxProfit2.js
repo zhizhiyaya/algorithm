@@ -3,6 +3,17 @@
  * @param {number[]} prices
  * @return {number}
  */
+ var maxProfit = function(prices) {
+    var prev = Number.MAX_VALUE;
+    var profit = 0;
+    prices.reduce((prev, i) => {
+        if (prev < i) {
+            profit += i - prev;
+        }
+        return i;
+    }, prev);
+    return profit;
+};
 var maxProfit = function(prices) {
     let max = 0;
     const length = prices.length;
@@ -18,5 +29,4 @@ var maxProfit = function(prices) {
 // Explanation: Buy on day 2 (price = 1) and sell on day 3 (price = 5), profit = 5-1 = 4.
 // Then buy on day 4 (price = 3) and sell on day 5 (price = 6), profit = 6-3 = 3.
 // [7,1,5,3,4,6]
-// Output: 7
-// 
+// Output: 7 

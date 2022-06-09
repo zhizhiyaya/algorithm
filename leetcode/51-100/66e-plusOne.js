@@ -15,3 +15,6 @@
     }
     return digits;
 };
+// Input: num = [1,2,0,0]
+// Output: [1,2,0,1]
+// Explanation: 1200 + 1 = 1201

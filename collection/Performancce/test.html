@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body onload="loadResources()">
+    <img id="image0" src="https://www.w3.org/Icons/w3c_home.png">
+    <script src="./asyncfetch.js"></script>
+    <script src="./performancce.js"></script>
+    <script src="./timeSlicing.js"></script>
+    <script src="https://w2.bdstatic.com/cdn-co.baifubao.com/static/agentjs/dist/agent-cloud.js"></script>
+    <script>
+        function ts (gen) {
+            if (typeof gen === 'function') gen = gen()
+            if (!gen || typeof gen.next !== 'function') return
+            return function next() {
+            const start = performance.now()
+            let res = null
+            do {
+                res = gen.next()
+            } while(!res.done && performance.now() - start < 25);
+        
+            if (res.done) return
+            setTimeout(next)
+            }
+        }
+        // setTimeout(() => {
+        //     const start = performance.now()
+        //     while (performance.now() - start < 500) {
+        //         console.log(11) // 6492次
+        //     }
+        //     console.log('done!')
+        // }, 5000);
+        // setTimeout(ts(function* () {
+        //     const start = performance.now()
+        //     while (performance.now() - start < 500) {
+        //         console.log(11) // 2070
+        //         yield 1;
+        //     }
+        //     console.log('done!')
+        // }), 5000);
+        // ts(function* () {
+        //     const start = performance.now()
+        //     while (performance.now() - start < 1000) {
+        //     console.log(11)
+        //     yield
+        //     }
+        //     console.log('done!')
+        // })();
+        // ts(function* () {
+        //     for (let i = 0; i < 1000; i++) {
+        //     console.log(11)
+        //     yield
+        //     }
+        //     console.log('done!')
+        // })();
+    </script>
+</body>
+</html>

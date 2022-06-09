@@ -1,4 +1,5 @@
 /**
+ * @desc 二进制相加
  * @param {string} a
  * @param {string} b
  * @return {string}

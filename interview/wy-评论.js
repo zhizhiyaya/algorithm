@@ -60,7 +60,6 @@ const data = [
     },
 ]
 
-
 function buildTree(list) {
   var res = [];
   for (var i = list.length; i--; ) {
