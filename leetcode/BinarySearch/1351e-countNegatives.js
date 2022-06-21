@@ -1,5 +1,6 @@
 /**
  * @desc m*n 矩阵，行列都是降序排列，返回负数的个数。
+ * @desc 从最后一行开始检测到负数 则累加负数的个数
  * ++++++
  * ++++--
  * ++++--
@@ -13,7 +14,7 @@
         if (grid[r][c] < 0) {
             --r;
             cnt += n - c; // there are n - c negative numbers in current row.
-        }else {
+        } else {
             ++c;
         }
     }
@@ -21,7 +22,6 @@
 };
 
 // Example 1:
-
 // Input: grid = [
 //      [4,3,2,-1],
 //      [3,2,1,-1],

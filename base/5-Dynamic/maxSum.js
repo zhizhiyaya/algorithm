@@ -1,7 +1,36 @@
-  // 1
-// 2 3 
-// 4 5 6
-// 数字三角形
+/**
+ * @desc 数字三角形
+ * 从下往上，val(i, j) = val(i, j) + Max(val(i+1, j), val(i+1, j+1))   
+    7
+    3 8
+    8 1 0
+    2 7 4 4  =》 7 12 10 10 （2 从 下一行的（4， 5）里选择5 变成7，7 从 （5， 2）里选择5 12 .... ）
+    4 5 2 6 5 
+ * @param {string} s
+ * @param {string} p
+ * @return max
+ */
+var maxVal = function(grid) {
+    var r = grid.length - 1;
+    var c = grid[r].length;
+    var arr = grid[r]; // 滚动数组
+
+    for(r--; r > -1; r--) {
+        for (var c = 0;  c < grid[r].length; c++) {
+            arr[c] = grid[r][c] + Math.max(arr[c], arr[c + 1]);
+        }
+    }
+    return arr[0];
+};
+
+console.log(maxVal([
+    [7],
+    [3, 8],
+    [8, 1, 0],
+    [2, 7, 4, 4] 
+]));
+    
+
 function maxSum(num, a)
 {
     var D = generateArr(num);
