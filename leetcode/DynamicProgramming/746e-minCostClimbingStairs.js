@@ -1,4 +1,5 @@
 /**
+ * @desc 花费最少价值 到达封顶（从数组透到数组尾+1 ，跟爬楼梯一样 步长 1||2 ）
  * @param {number} n
  * @return {number}
  */
@@ -11,3 +12,4 @@ var minCostClimbingStairs = function(cost) {
     }
     return Math.min(a, b);
 };
+
