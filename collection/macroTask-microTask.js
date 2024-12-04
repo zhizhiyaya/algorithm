@@ -45,3 +45,33 @@ for (let i = 0; i < 5; i++) {
     })
 }
 console.log(i);
+
+
+// vue2.0 nextTick 
+let count = 0;
+flushCallbacks = (e) => {
+  console.log(e, count++);
+}
+setTimeout(() => {
+  flushCallbacks('setTimeout')
+}, 0)
+
+window.setImmediate && window.setImmediate(() => {
+  flushCallbacks('setImmediate')
+})
+
+const observer = new MutationObserver(() => {
+  flushCallbacks('MutationObserver')
+})
+const textNode = document.createTextNode(String(count))
+observer.observe(textNode, {
+  characterData: true
+})
+// textNode.data = String(count + 'aaaa')
+
+const p = Promise.resolve()
+p.then(() => {
+  flushCallbacks('Promise')
+})
+
+textNode.data = String(count + 'aaaa')

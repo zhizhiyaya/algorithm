@@ -50,3 +50,26 @@ var twoSum = function(nums, target) {
 
 console.log(twoSum([3, 2, 4], 6));
 console.log(twoSum([-1, -2, -3, -4, -5], -8));
+
+
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+var twoSum = function(nums, target) {
+    if (!nums || nums.length < 2) return null;
+    var length = nums.length;
+    var i = 0;
+    while(i < length -1) {
+        var j = i + 1;
+        while( j < length) {
+            if (nums[i] + nums[j] === target) {
+                return [i, j];
+            }
+            j++;
+        }
+        i++;
+    }
+    return null;
+};

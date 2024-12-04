@@ -7,7 +7,10 @@
  */
  var arrangeCoins = function(n) {
     // 完整楼梯的个数 (1+ i)*i / 2 <=n ,反解i ,也可以穷举和接近 n 的；
-    
-    
+    for (var i = 0; i < n; i++) {
+        if ((1+ i) * i / 2 <= n && (1+ i + 1)*(i + 1) / 2 > n) {
+            return i;
+        }
+    }
 };
 

@@ -1,4 +1,17 @@
 /**
+ * 动态规划实现
+    定义状态：dp[i][w] 表示前 𝑖 件物品在容量为 𝑤 的背包中的最大价值。
+    状态转移方程：
+        如果不选第 i 件物品：dp[i][w] = dp[i-1][w]；
+        如果选第 i 件物品：dp[i][w] = dp[i-1][w-weights[i]] + values[i]
+        那么：dp[i][w]=max(dp[i−1][w],dp[i−1][w−weights[i]]+values[i])
+    初始化：
+        dp[0][w] = 0，容量为 w 时，无物品可选时的价值为 0
+    计算顺序：
+    遍历物品，从 i=1 到 n；遍历容量，从 w=0 到 𝑊。
+ */
+
+/**
  * @desc 每种物品均有两种拿法， 即 拿或不拿，枚举的方法总数为 Math.pow(2, k);
  * @param {number[][]} matrix
  * @return {number}

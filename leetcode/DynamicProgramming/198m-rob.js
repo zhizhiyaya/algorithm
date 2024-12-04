@@ -5,11 +5,11 @@
  * @return {number}
  */
 var rob = function(nums) {
-    var dp = [0, 0];
+    var dp = [0, 0]; // dp[0] 偷nums[i]时的值, dp[1]是nums[i]前面序列偷不偷的最大值
     var length = nums.length;
     for (var i = 0; i < length; i++) {
         var t = dp[0];
-        dp[0] = nums[i] + dp[1];
+        dp[0] = nums[i] + dp[1]; // 当前数值+间隔为的最大值dp[1]
         dp[1] = Math.max(t, dp[1]);
     }
     return Math.max(dp[0], dp[1]);
@@ -30,7 +30,7 @@ var rob = function(nums) {
 [
     [0, 0],
     [2, 0], // 偷 num[0], 
-    [1, 2], // 偷 num[1],不偷价值为 2
+    [1, 2], // 偷 num[1],不偷价值为 2（即相邻位的最大值）
     [3, 2], // 偷 num[2],不偷价值为 num[2]之前的最大值 2
     [4, 3]  // 偷 num[3],不偷价值为 2
 ]

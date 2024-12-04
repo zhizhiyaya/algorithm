@@ -7,7 +7,7 @@
  * @param {string[]} wordList
  * @return {string[][]}
  */
-var findLadders = function(beginWord, endWord, wordList) {
+var findLadders = function(start, end, wordList) {
     var dict = {};
     var res = [];
     var nodeNeighbors = {};

@@ -1,8 +1,22 @@
-/**
+/** Best
  * @method 查找最长不重复字符的字符串
  * @param {string} s
  * @return {number}
  */
+var lengthOfLongestSubstring = function(s) {
+	var hashMap = {};
+	var ans = 0;
+	for (var end = 0, start = 0; end < s.length; end++) {
+		var alpha = s.charAt(end);
+		if (hashMap[alpha] > -1) {
+			start = Math.max(hashMap[alpha], start);
+		}
+		ans = Math.max(ans, end - start + 1);
+		hashMap[alpha] = end + 1;
+	}
+	return ans;
+}
+
 var lengthOfLongestSubstring = function(s) {
 	var len = s.length;
 	if (len === 0 || len === 1) {
@@ -27,6 +41,31 @@ var lengthOfLongestSubstring = function(s) {
 		}
 	}
 	return subLen;
+};
+
+
+// TLE 了
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var lengthOfLongestSubstring = function(s) {debugger
+	var maxStr = '';
+	var i = 0;
+	while(i < s.length) {
+		var curStr = s[i];
+		i++;
+		var subStrArr = s.substring(i).split('');
+		while (subStrArr.length) {
+			if (curStr.indexOf(subStrArr[0]) === -1) {
+				curStr += subStrArr.splice(0, 1).join('');
+			} else {
+				break;
+			}
+		}
+		maxStr = maxStr.length >= curStr.length ? maxStr : curStr;
+	}
+	return maxStr.length;
 };
 
 console.log(lengthOfLongestSubstring('abcabcbb'));
