@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GPT 流式输出模拟器</title>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+    }
+    #raw, #rendered {
+      width: 50%;
+      border: 1px solid #ccc;
+      padding: 10px;
+      white-space: pre-wrap;
+      background: #f9f9f9;
+    }
+    code {
+      background: #eee;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div id="raw"></div>
+  <div id="rendered"></div>
+
+  <script>
+    const md = window.markdownit();
+
+    const chunks = [
+      "# ChatGPT 流式输出模拟器\n\n",
+      "我们来演示一下 **边输出边渲染** 的效果～\n\n",
+      "```js\nconsole.log('Hello World');\n```\n\n",
+      "- 支持列表\n- 粗体、斜体\n- 实时代码块\n\n",
+      "太酷啦 😎"
+    ];
+
+    let rawText = '';
+    let index = 0;
+
+    const rawEl = document.getElementById('raw');
+    const renderedEl = document.getElementById('rendered');
+
+    const interval = setInterval(() => {
+      if (index >= chunks.length) {
+        clearInterval(interval);
+        return;
+      }
+
+      rawText += chunks[index];
+      index++;
+
+      rawEl.textContent = rawText;
+
+      // 实时渲染 markdown → HTML
+      renderedEl.innerHTML = md.render(rawText);
+    }, 1000);
+  </script>
+</body>
+</html>
