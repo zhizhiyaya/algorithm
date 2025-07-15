@@ -5,8 +5,68 @@
 		<title>QuickSort Live Demo</title>
 		<link rel="stylesheet" href="../style/base.css" />
 	</head>
-	<body class="m-horizontal-wrap">
+	<body class="m-vertical-wrap">
+		<h1>Quick Sort 快速排序</h1>
+		<div class="algorithm-info">
+			<h3>算法原理：</h3>
+			<p>1. 选择一个基准元素（pivot），通常是最后一个元素</p>
+			<p>2. 将数组分区：小于基准的元素放左边，大于基准的放右边</p>
+			<p>3. 递归地对左右两个子数组进行快速排序</p>
+			<p>4. 基准元素已在正确位置，不需要再移动</p>
+			<h3>动画说明：</h3>
+			<p>📦 <span style="color: #e74c3c; border: 2px solid #e74c3c;">红色边框</span>：当前正在处理的子数组范围</p>
+			<p>🎯 <span style="color: #ff6b6b;">红色</span>：当前基准元素（pivot）</p>
+			<p>🔄 <span style="color: #4ecdc4;">绿色</span>：正在比较的元素</p>
+			<p>🔥 <span style="color: #ffa500;">橙色</span>：正在交换的元素</p>
+			<p>✅ <span style="color: #45b7d1;">蓝色</span>：已找到正确位置的元素</p>
+			<p>⚪ <span style="color: #95a5a6;">灰色</span>：暂时不处理的元素</p>
+		</div>
 		<script src="../scripts/base.js" ></script>
+		<script src="../scripts/verticalDom.js" ></script>
 		<script src="./live.js"></script>
+		<style>
+			.algorithm-info {
+				margin: 20px auto;
+				padding: 20px;
+				background: #f8f9fa;
+				border-radius: 8px;
+				max-width: 600px;
+				font-family: Arial, sans-serif;
+			}
+			.algorithm-info h3 {
+				color: #2c3e50;
+				margin-bottom: 10px;
+			}
+			.algorithm-info p {
+				margin: 8px 0;
+				line-height: 1.6;
+			}
+			.m-vertical-wrap .child.pivot { 
+				background: #ff6b6b !important; 
+				transition: all .5s ease-in .1s;
+			}
+			.m-vertical-wrap .child.comparing { 
+				background: #4ecdc4 !important; 
+				transition: all .5s ease-in .1s;
+			}
+			.m-vertical-wrap .child.light { 
+				background: #ffa500 !important; 
+				transition: all .5s ease-in .1s;
+			}
+			.m-vertical-wrap .child.placed { 
+				background: #45b7d1 !important; 
+				transition: all .5s ease-in .1s;
+			}
+			.m-vertical-wrap .child.inactive { 
+				background: #95a5a6 !important; 
+				opacity: 0.5;
+				transition: all .5s ease-in .1s;
+			}
+			.m-vertical-wrap .child.active-range { 
+				border: 3px solid #e74c3c !important; 
+				box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+				transition: all .5s ease-in .1s;
+			}
+		</style>
 	</body>
 </html>

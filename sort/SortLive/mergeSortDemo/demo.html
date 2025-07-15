@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>MergeSort Live Demo</title>
+		<link rel="stylesheet" href="../style/base.css" />
+	</head>
+	<body class="m-vertical-wrap">
+		<h1>Merge Sort 归并排序</h1>
+		<div class="algorithm-info">
+			<h3>算法原理：</h3>
+			<p>1. 将数组分割成两个子数组，直到每个子数组只有一个元素</p>
+			<p>2. 将两个已排序的子数组合并成一个更大的已排序数组</p>
+			<p>3. 重复合并过程，直到所有子数组都合并成一个完整的已排序数组</p>
+			<p>4. 采用"分而治之"的策略，时间复杂度为 O(n log n)</p>
+			<h3>动画说明：</h3>
+			<p>📦 <span style="color: #e74c3c; border: 2px solid #e74c3c;">红色边框</span>：当前正在合并的子数组范围</p>
+			<p>🔵 <span style="color: #3498db;">蓝色</span>：左子数组中的元素</p>
+			<p>🟢 <span style="color: #2ecc71;">绿色</span>：右子数组中的元素</p>
+			<p>🔥 <span style="color: #f39c12;">橙色</span>：正在比较和移动的元素</p>
+			<p>✅ <span style="color: #9b59b6;">紫色</span>：已完成合并的元素</p>
+		</div>
+		<script src="../scripts/base.js" ></script>
+		<script src="../scripts/verticalDom.js" ></script>
+		<script src="./live.js"></script>
+		<style>
+			.algorithm-info {
+				margin: 20px auto;
+				padding: 20px;
+				background: #f8f9fa;
+				border-radius: 8px;
+				max-width: 600px;
+				font-family: Arial, sans-serif;
+			}
+			.algorithm-info h3 {
+				color: #2c3e50;
+				margin-bottom: 10px;
+			}
+			.algorithm-info p {
+				margin: 8px 0;
+				line-height: 1.6;
+			}
+			.m-vertical-wrap .child.merging-range { 
+				border: 3px solid #e74c3c !important; 
+				box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+				transition: all .5s ease-in .1s;
+			}
+			.m-vertical-wrap .child.left-array { 
+				background: #3498db !important; 
+				transition: all .5s ease-in .1s;
+			}
+			.m-vertical-wrap .child.right-array { 
+				background: #2ecc71 !important; 
+				transition: all .5s ease-in .1s;
+			}
+			.m-vertical-wrap .child.comparing { 
+				background: #f39c12 !important; 
+				transition: all .5s ease-in .1s;
+			}
+			.m-vertical-wrap .child.merged { 
+				background: #9b59b6 !important; 
+				transition: all .5s ease-in .1s;
+			}
+			.m-vertical-wrap .child.light { 
+				background: #f39c12 !important; 
+				transition: all .5s ease-in .1s;
+			}
+		</style>
+	</body>
+</html>
