@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>温馨一居室 - 可视化设计方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 30px;
+            background: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            color: #2c3e50;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .view-section {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        /* 平面图样式 */
+        .floor-plan-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .floor-plan {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 10 / 6;
+            background: #f8f9fa;
+            border: 4px solid #2c3e50;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .room-plan {
+            position: absolute;
+            border: 3px solid #2c3e50;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .room-plan:hover {
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .room-plan .room-name {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .room-plan .room-area {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .room-plan .room-furniture {
+            position: absolute;
+            font-size: 0.7em;
+            color: #555;
+            margin-top: 35px;
+            text-align: center;
+            line-height: 1.4;
+            padding: 0 10px;
+        }
+
+        /* 各房间样式 */
+        .living-plan {
+            left: 15%;
+            top: 10%;
+            width: 40%;
+            height: 75%;
+            background: linear-gradient(135deg, #C6D7B8 0%, #B8C8A8 100%);
+        }
+
+        .balcony-plan {
+            left: 0;
+            top: 30%;
+            width: 15%;
+            height: 35%;
+            background: linear-gradient(135deg, #F5E6D3 0%, #E5D6C3 100%);
+        }
+
+        .kitchen-plan {
+            left: 55%;
+            top: 10%;
+            width: 20%;
+            height: 35%;
+            background: linear-gradient(135deg, #D4E5D4 0%, #C4D5C4 100%);
+        }
+
+        .bathroom-plan {
+            left: 75%;
+            top: 10%;
+            width: 25%;
+            height: 35%;
+            background: linear-gradient(135deg, #E0E0D0 0%, #D0D0C0 100%);
+        }
+
+        .bedroom-plan {
+            left: 55%;
+            top: 45%;
+            width: 45%;
+            height: 40%;
+            background: linear-gradient(135deg, #E8D5C4 0%, #D8C5B4 100%);
+        }
+
+        /* 门的标识 */
+        .door {
+            position: absolute;
+            background: #8B4513;
+        }
+
+        .door-h {
+            width: 50px;
+            height: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .door-v {
+            width: 4px;
+            height: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* 3D房间视图 */
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+        }
+
+        .room-3d {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .room-3d:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .room-header {
+            padding: 20px;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .room-visual {
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+
+        .perspective-room {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(to bottom, #e8e8e8 0%, #f5f5f5 50%, #e0e0e0 100%);
+        }
+
+        /* 透视墙面 */
+        .wall-left {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(200, 200, 200, 0.5), transparent);
+            clip-path: polygon(0 20%, 0 80%, 40% 100%, 40% 0);
+        }
+
+        .wall-right {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(to left, rgba(200, 200, 200, 0.5), transparent);
+            clip-path: polygon(60% 0, 60% 100%, 100% 80%, 100% 20%);
+        }
+
+        .floor-area {
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 60%;
+            background: linear-gradient(to bottom, transparent, rgba(150, 150, 150, 0.3));
+            clip-path: polygon(0 30%, 100% 30%, 100% 100%, 0 100%);
+        }
+
+        /* 家具图标 */
+        .furniture-item {
+            position: absolute;
+            text-align: center;
+            font-size: 2em;
+            transition: transform 0.3s;
+        }
+
+        .furniture-item:hover {
+            transform: scale(1.2);
+        }
+
+        .furniture-label {
+            font-size: 0.4em;
+            display: block;
+            margin-top: 5px;
+            color: #555;
+            font-weight: normal;
+        }
+
+        .room-description {
+            padding: 25px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .feature-icon {
+            font-size: 1.5em;
+        }
+
+        .color-scheme {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .color-dots {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .color-dot {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .color-dot:hover::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        /* 整体视图 */
+        .overview-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .overview-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .overview-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .overview-list {
+            list-style: none;
+        }
+
+        .overview-list li {
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .overview-list strong {
+            color: #667eea;
+            display: inline-block;
+            min-width: 80px;
+        }
+
+        @media (max-width: 1024px) {
+            .overview-container {
+                grid-template-columns: 1fr;
+            }
+
+            .rooms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .floor-plan {
+                aspect-ratio: 10 / 8;
+            }
+
+            .room-plan .room-name {
+                font-size: 1em;
+            }
+
+            .room-plan .room-furniture {
+                font-size: 0.6em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>温馨一居室设计方案</h1>
+        <p>51m² · 北欧简约风 · 奶油绿主题</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showView('plan')">📐 平面布局图</button>
+        <button class="tab-btn" onclick="showView('rooms')">🏠 各房间设计</button>
+        <button class="tab-btn" onclick="showView('overview')">📋 设计总览</button>
+    </div>
+
+    <div class="content-container">
+        <!-- 平面布局图 -->
+        <div id="plan" class="view-section active">
+            <h2 class="section-title">户型平面布局图</h2>
+            <div class="floor-plan-container">
+                <div class="floor-plan">
+                    <!-- 阳台 -->
+                    <div class="room-plan balcony-plan">
+                        <div class="room-name">阳台</div>
+                        <div class="room-area">3.4m²</div>
+                        <div class="room-furniture">☕ 休闲区<br>🌱 绿植<br>🧺 洗衣</div>
+                    </div>
+
+                    <!-- 客厅 -->
+                    <div class="room-plan living-plan">
+                        <div class="room-name">客厅</div>
+                        <div class="room-area">24.9m²</div>
+                        <div class="room-furniture">🛋️ 沙发区 · 📺 电视墙<br>🍽️ 餐桌 · 📚 书架</div>
+                        <div class="door door-h" style="top: 0;"></div>
+                    </div>
+
+                    <!-- 厨房 -->
+                    <div class="room-plan kitchen-plan">
+                        <div class="room-name">厨房</div>
+                        <div class="room-area">5.8m²</div>
+                        <div class="room-furniture">🍳 L型台面<br>❄️ 冰箱<br>🔥 灶台</div>
+                        <div class="door door-v" style="left: 0;"></div>
+                    </div>
+
+                    <!-- 卫生间 -->
+                    <div class="room-plan bathroom-plan">
+                        <div class="room-name">卫生间</div>
+                        <div class="room-area">4.9m²</div>
+                        <div class="room-furniture">🚽 马桶<br>🚿 淋浴<br>🚰 洗手台</div>
+                        <div class="door door-v" style="left: 0; top: 30%;"></div>
+                    </div>
+
+                    <!-- 卧室 -->
+                    <div class="room-plan bedroom-plan">
+                        <div class="room-name">卧室</div>
+                        <div class="room-area">12.0m²</div>
+                        <div class="room-furniture">🛏️ 双人床 · 👔 衣柜<br>💄 梳妆台 · 🪑 休闲椅</div>
+                        <div class="door door-h" style="top: 0;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; text-align: center; color: #666;">
+                    <p>💡 提示：点击房间可查看详细设计（需在"各房间设计"标签页查看）</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 各房间设计 -->
+        <div id="rooms" class="view-section">
+            <h2 class="section-title">各空间设计详情</h2>
+
+            <div class="rooms-grid">
+                <!-- 客厅 -->
+                <div class="room-3d">
+                    <div class="room-header" style="background: linear-gradient(135deg, #C6D7B8 0%, #A4BE9B 100%);">
+                        客厅 · 24.9m²
+                    </div>
+                    <div class="room-visual">
+                        <div class="perspective-room" style="background: linear-gradient(to bottom, #F5F5DC 0%, #E8E8D0 50%, #C6D7B8 100%);">
+                            <div class="wall-left" style="background: linear-gradient(to right, rgba(198, 215, 184, 0.3), transparent);"></div>
+                            <div class="wall-right" style="background: linear-gradient(to left, rgba(198, 215, 184, 0.3), transparent);"></div>
+                            <div class="furniture-item" style="left: 20%; bottom: 30%;">
+                                🛋️<span class="furniture-label">沙发</span>
+                            </div>
+                            <div class="furniture-item" style="left: 35%; bottom: 35%;">
+                                ⬜<span class="furniture-label">茶几</span>
+                            </div>
+                            <div class="furniture-item" style="right: 25%; bottom: 20%;">
+                                📺<span class="furniture-label">电视</span>
+                            </div>
+                            <div class="furniture-item" style="left: 60%; bottom: 40%;">
+                                🍽️<span class="furniture-label">餐桌</span>
+                            </div>
+                            <div class="furniture-item" style="right: 15%; bottom: 45%;">
+                                🌿<span class="furniture-label">绿植</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-description">
+                        <strong style="color: #2c3e50;">设计理念</strong>
+                        <p style="margin-top: 10px; line-height: 1.6;">开放通透的北欧风格，以奶油绿为主色调，打造温馨舒适的会客与生活空间。</p>
+
+                        <div class="color-scheme">
+                            <strong>配色方案</strong>
+                            <div class="color-dots">
+                                <div class="color-dot" style="background: #C6D7B8;" data-name="奶油绿"></div>
+                                <div class="color-dot" style="background: #F5F5DC;" data-name="米白色"></div>
+                                <div class="color-dot" style="background: #D4A574;" data-name="原木色"></div>
+                                <div class="color-dot" style="background: #B8956A;" data-name="黄铜金"></div>
+                            </div>
+                        </div>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <span class="feature-icon">🛋️</span>
+                                <div>
+                                    <strong>沙发区</strong>
+                                    <p style="font-size: 0.9em; color: #666;">奶白布艺沙发</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">📺</span>
+                                <div>
+                                    <strong>电视墙</strong>
+                                    <p style="font-size: 0.9em; color: #666;">浅绿背景墙</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🍽️</span>
+                                <div>
+                                    <strong>餐饮区</strong>
+                                    <p style="font-size: 0.9em; color: #666;">原木餐桌椅</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">💡</span>
+                                <div>
+                                    <strong>灯光</strong>
+                                    <p style="font-size: 0.9em; color: #666;">暖白光源</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 卧室 -->
+                <div class="room-3d">
+                    <div class="room-header" style="background: linear-gradient(135deg, #E8D5C4 0%, #D4C0AF 100%);">
+                        卧室 · 12.0m²
+                    </div>
+                    <div class="room-visual">
+                        <div class="perspective-room" style="background: linear-gradient(to bottom, #F5E6D3 0%, #E8D5C4 50%, #D8C5B4 100%);">
+                            <div class="wall-left" style="background: linear-gradient(to right, rgba(232, 213, 196, 0.3), transparent);"></div>
+                            <div class="wall-right" style="background: linear-gradient(to left, rgba(232, 213, 196, 0.3), transparent);"></div>
+                            <div class="furniture-item" style="left: 30%; bottom: 30%;">
+                                🛏️<span class="furniture-label">双人床</span>
+                            </div>
+                            <div class="furniture-item" style="right: 20%; bottom: 25%;">
+                                👔<span class="furniture-label">衣柜</span>
+                            </div>
+                            <div class="furniture-item" style="left: 20%; bottom: 45%;">
+                                💡<span class="furniture-label">台灯</span>
+                            </div>
+                            <div class="furniture-item" style="right: 30%; bottom: 40%;">
+                                🪑<span class="furniture-label">休闲椅</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-description">
+                        <strong style="color: #2c3e50;">设计理念</strong>
+                        <p style="margin-top: 10px; line-height: 1.6;">温馨宁静的睡眠空间，使用暖杏色营造舒适的休息氛围。</p>
+
+                        <div class="color-scheme">
+                            <strong>配色方案</strong>
+                            <div class="color-dots">
+                                <div class="color-dot" style="background: #E8D5C4;" data-name="暖杏色"></div>
+                                <div class="color-dot" style="background: #F5F5DC;" data-name="米白色"></div>
+                                <div class="color-dot" style="background: #C6D7B8;" data-name="浅绿色"></div>
+                                <div class="color-dot" style="background: #D4A574;" data-name="原木色"></div>
+                            </div>
+                        </div>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <span class="feature-icon">🛏️</span>
+                                <div>
+                                    <strong>睡眠区</strong>
+                                    <p style="font-size: 0.9em; color: #666;">原木床架</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">👔</span>
+                                <div>
+                                    <strong>收纳区</strong>
+                                    <p style="font-size: 0.9em; color: #666;">大容量衣柜</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">💄</span>
+                                <div>
+                                    <strong>梳妆区</strong>
+                                    <p style="font-size: 0.9em; color: #666;">化妆台+镜</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🪟</span>
+                                <div>
+                                    <strong>采光</strong>
+                                    <p style="font-size: 0.9em; color: #666;">棉麻窗帘</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 厨房 -->
+                <div class="room-3d">
+                    <div class="room-header" style="background: linear-gradient(135deg, #D4E5D4 0%, #C0D4C0 100%);">
+                        厨房 · 5.8m²
+                    </div>
+                    <div class="room-visual">
+                        <div class="perspective-room" style="background: linear-gradient(to bottom, #E0F0E0 0%, #D4E5D4 50%, #C4D5C4 100%);">
+                            <div class="wall-left" style="background: linear-gradient(to right, rgba(212, 229, 212, 0.3), transparent);"></div>
+                            <div class="wall-right" style="background: linear-gradient(to left, rgba(212, 229, 212, 0.3), transparent);"></div>
+                            <div class="furniture-item" style="left: 15%; bottom: 25%;">
+                                🔥<span class="furniture-label">灶台</span>
+                            </div>
+                            <div class="furniture-item" style="left: 35%; bottom: 30%;">
+                                🚰<span class="furniture-label">水槽</span>
+                            </div>
+                            <div class="furniture-item" style="right: 20%; bottom: 28%;">
+                                ❄️<span class="furniture-label">冰箱</span>
+                            </div>
+                            <div class="furniture-item" style="left: 55%; bottom: 35%;">
+                                🍳<span class="furniture-label">橱柜</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-description">
+                        <strong style="color: #2c3e50;">设计理念</strong>
+                        <p style="margin-top: 10px; line-height: 1.6;">延续你喜欢的配色，浅绿瓷砖+奶白橱柜+黄铜把手，清新实用。</p>
+
+                        <div class="color-scheme">
+                            <strong>配色方案</strong>
+                            <div class="color-dots">
+                                <div class="color-dot" style="background: #D4E5D4;" data-name="浅绿瓷砖"></div>
+                                <div class="color-dot" style="background: #F5F5DC;" data-name="奶白橱柜"></div>
+                                <div class="color-dot" style="background: #FFFFFF;" data-name="白色台面"></div>
+                                <div class="color-dot" style="background: #B8956A;" data-name="黄铜五金"></div>
+                            </div>
+                        </div>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <span class="feature-icon">🔲</span>
+                                <div>
+                                    <strong>L型布局</strong>
+                                    <p style="font-size: 0.9em; color: #666;">高效动线</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">✨</span>
+                                <div>
+                                    <strong>瓷砖墙面</strong>
+                                    <p style="font-size: 0.9em; color: #666;">20×20cm</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🔧</span>
+                                <div>
+                                    <strong>黄铜五金</strong>
+                                    <p style="font-size: 0.9em; color: #666;">拉手水龙头</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">💡</span>
+                                <div>
+                                    <strong>照明</strong>
+                                    <p style="font-size: 0.9em; color: #666;">吊灯+柜底灯</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 卫生间 -->
+                <div class="room-3d">
+                    <div class="room-header" style="background: linear-gradient(135deg, #E0E0D0 0%, #D0D0C0 100%);">
+                        卫生间 · 4.9m²
+                    </div>
+                    <div class="room-visual">
+                        <div class="perspective-room" style="background: linear-gradient(to bottom, #F0F0E0 0%, #E0E0D0 50%, #D0D0C0 100%);">
+                            <div class="wall-left" style="background: linear-gradient(to right, rgba(224, 224, 208, 0.3), transparent);"></div>
+                            <div class="wall-right" style="background: linear-gradient(to left, rgba(224, 224, 208, 0.3), transparent);"></div>
+                            <div class="furniture-item" style="left: 20%; bottom: 28%;">
+                                🚽<span class="furniture-label">马桶</span>
+                            </div>
+                            <div class="furniture-item" style="left: 45%; bottom: 32%;">
+                                🚰<span class="furniture-label">洗手台</span>
+                            </div>
+                            <div class="furniture-item" style="right: 20%; bottom: 25%;">
+                                🚿<span class="furniture-label">淋浴</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-description">
+                        <strong style="color: #2c3e50;">设计理念</strong>
+                        <p style="margin-top: 10px; line-height: 1.6;">简约明亮的盥洗空间，使用浅色系延续整体色调。</p>
+
+                        <div class="color-scheme">
+                            <strong>配色方案</strong>
+                            <div class="color-dots">
+                                <div class="color-dot" style="background: #FFFFFF;" data-name="白色洁具"></div>
+                                <div class="color-dot" style="background: #E0E0D0;" data-name="米白瓷砖"></div>
+                                <div class="color-dot" style="background: #C0C0B0;" data-name="浅灰地砖"></div>
+                                <div class="color-dot" style="background: #B8956A;" data-name="黄铜龙头"></div>
+                            </div>
+                        </div>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <span class="feature-icon">🚿</span>
+                                <div>
+                                    <strong>淋浴区</strong>
+                                    <p style="font-size: 0.9em; color: #666;">玻璃隔断</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🪞</span>
+                                <div>
+                                    <strong>镜柜</strong>
+                                    <p style="font-size: 0.9em; color: #666;">带灯带</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🧺</span>
+                                <div>
+                                    <strong>收纳</strong>
+                                    <p style="font-size: 0.9em; color: #666;">壁龛设计</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">💨</span>
+                                <div>
+                                    <strong>通风</strong>
+                                    <p style="font-size: 0.9em; color: #666;">排气扇</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 阳台 -->
+                <div class="room-3d">
+                    <div class="room-header" style="background: linear-gradient(135deg, #F5E6D3 0%, #E5D6C3 100%);">
+                        阳台 · 3.4m²
+                    </div>
+                    <div class="room-visual">
+                        <div class="perspective-room" style="background: linear-gradient(to bottom, #FFF8F0 0%, #F5E6D3 50%, #E5D6C3 100%);">
+                            <div class="wall-left" style="background: linear-gradient(to right, rgba(245, 230, 211, 0.3), transparent);"></div>
+                            <div class="wall-right" style="background: linear-gradient(to left, rgba(245, 230, 211, 0.3), transparent);"></div>
+                            <div class="furniture-item" style="left: 25%; bottom: 30%;">
+                                ☕<span class="furniture-label">小桌</span>
+                            </div>
+                            <div class="furniture-item" style="left: 45%; bottom: 35%;">
+                                🪴<span class="furniture-label">绿植</span>
+                            </div>
+                            <div class="furniture-item" style="right: 25%; bottom: 28%;">
+                                🧺<span class="furniture-label">洗衣机</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-description">
+                        <strong style="color: #2c3e50;">设计理念</strong>
+                        <p style="margin-top: 10px; line-height: 1.6;">打造阳光小花园，利用绿植和原木元素营造自然氛围。</p>
+
+                        <div class="color-scheme">
+                            <strong>配色方案</strong>
+                            <div class="color-dots">
+                                <div class="color-dot" style="background: #D4A574;" data-name="防腐木地板"></div>
+                                <div class="color-dot" style="background: #F5F5DC;" data-name="白色墙面"></div>
+                                <div class="color-dot" style="background: #27ae60;" data-name="绿植"></div>
+                            </div>
+                        </div>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <span class="feature-icon">☕</span>
+                                <div>
+                                    <strong>休闲区</strong>
+                                    <p style="font-size: 0.9em; color: #666;">折叠桌椅</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🌿</span>
+                                <div>
+                                    <strong>绿植区</strong>
+                                    <p style="font-size: 0.9em; color: #666;">花架+盆栽</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🧺</span>
+                                <div>
+                                    <strong>洗衣区</strong>
+                                    <p style="font-size: 0.9em; color: #666;">隐藏式柜体</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">💡</span>
+                                <div>
+                                    <strong>氛围</strong>
+                                    <p style="font-size: 0.9em; color: #666;">串灯装饰</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设计总览 -->
+        <div id="overview" class="view-section">
+            <h2 class="section-title">设计方案总览</h2>
+
+            <div class="overview-container">
+                <div class="overview-section">
+                    <h3>📐 户型信息</h3>
+                    <ul class="overview-list">
+                        <li><strong>总面积：</strong>51.0m²</li>
+                        <li><strong>户型：</strong>1室1厅1厨1卫1阳台</li>
+                        <li><strong>层高：</strong>3.0米（标准层高）</li>
+                        <li><strong>朝向：</strong>南北通透，采光良好</li>
+                        <li><strong>使用率：</strong>约85%（高效空间利用）</li>
+                    </ul>
+                </div>
+
+                <div class="overview-section">
+                    <h3>🎨 整体风格</h3>
+                    <ul class="overview-list">
+                        <li><strong>风格：</strong>北欧简约风</li>
+                        <li><strong>主色调：</strong>奶油绿 + 米白</li>
+                        <li><strong>辅助色：</strong>暖杏色 + 原木色</li>
+                        <li><strong>金属色：</strong>黄铜金（五金件）</li>
+                        <li><strong>理念：</strong>温馨、自然、舒适</li>
+                    </ul>
+                </div>
+
+                <div class="overview-section">
+                    <h3>🛋️ 主要家具</h3>
+                    <ul class="overview-list">
+                        <li><strong>客厅：</strong>沙发、茶几、电视柜、餐桌椅、书架、落地灯</li>
+                        <li><strong>卧室：</strong>双人床、床头柜、衣柜、梳妆台、休闲椅</li>
+                        <li><strong>厨房：</strong>L型橱柜、冰箱、灶台、油烟机</li>
+                        <li><strong>卫生间：</strong>马桶、淋浴区、浴室柜、镜柜</li>
+                        <li><strong>阳台：</strong>折叠桌椅、花架、洗衣机</li>
+                    </ul>
+                </div>
+
+                <div class="overview-section">
+                    <h3>💡 设计亮点</h3>
+                    <ul class="overview-list">
+                        <li><strong>配色统一：</strong>全屋色调和谐，温馨自然</li>
+                        <li><strong>收纳充足：</strong>多处收纳空间，整洁有序</li>
+                        <li><strong>动线合理：</strong>厨房-餐厅-客厅流畅衔接</li>
+                        <li><strong>采光优越：</strong>大面积窗户，自然光充足</li>
+                        <li><strong>材质天然：</strong>实木、棉麻、陶瓷等自然材质</li>
+                    </ul>
+                </div>
+
+                <div class="overview-section">
+                    <h3>🔨 主要材料</h3>
+                    <ul class="overview-list">
+                        <li><strong>地板：</strong>实木复合地板（原木色）</li>
+                        <li><strong>墙面：</strong>乳胶漆（奶白/浅绿）</li>
+                        <li><strong>厨卫墙：</strong>防水瓷砖（浅绿/米白）</li>
+                        <li><strong>台面：</strong>石英石（厨房、卫生间）</li>
+                        <li><strong>五金：</strong>黄铜拉手、龙头、把手</li>
+                    </ul>
+                </div>
+
+                <div class="overview-section">
+                    <h3>💰 预算建议</h3>
+                    <ul class="overview-list">
+                        <li><strong>硬装：</strong>40-50%（水电、瓷砖、地板）</li>
+                        <li><strong>家具：</strong>30-35%（床、沙发、橱柜等）</li>
+                        <li><strong>电器：</strong>15-20%（冰箱、洗衣机等）</li>
+                        <li><strong>软装：</strong>5-10%（窗帘、装饰、绿植）</li>
+                        <li><strong>重点投入：</strong>床垫、沙发、厨卫五金</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white; text-align: center;">
+                <h3 style="margin-bottom: 15px; font-size: 1.5em;">✨ 温馨提示</h3>
+                <p style="line-height: 1.8; font-size: 1.1em;">
+                    本设计方案以北欧简约风格为基础，结合您喜欢的厨房配色（奶油绿+米白+黄铜），<br>
+                    为您打造一个温馨、舒适、实用的51m²一居室空间。<br>
+                    所有设计细节均可根据您的实际需求和预算进行调整。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showView(viewId) {
+            // 隐藏所有视图
+            document.querySelectorAll('.view-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 移除所有按钮的active状态
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 显示选中的视图
+            document.getElementById(viewId).classList.add('active');
+
+            // 激活对应按钮
+            event.target.classList.add('active');
+        }
+
+        // 添加房间点击事件（平面图）
+        document.querySelectorAll('.room-plan').forEach(room => {
+            room.addEventListener('click', function() {
+                // 切换到各房间设计标签页
+                showView('rooms');
+
+                // 更新标签页按钮状态
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

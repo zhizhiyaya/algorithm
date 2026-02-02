@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/dxm/Documents/myFE/algorithm/**)"
+    ],
+    "deny": [],
+    "ask": [],
+    "additionalDirectories": [
+      "/Users/dxm/Documents/myFE/algorithm/react-native-doc/"
+    ]
+  }
+}

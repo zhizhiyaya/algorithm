@@ -1,0 +1,20 @@
+{
+  "env": {
+    "HTTP_PROXY": "http://127.0.0.1:7890",
+    "HTTPS_PROXY": "http://127.0.0.1:7890",
+    "NO_PROXY": "localhost,127.0.0.1,.local,.company.com",
+    "npm_config_proxy": "https://fnpm.duxiaoman-int.com/",
+    "npm_config_https_proxy": "https://fnpm.duxiaoman-int.com/",
+    "npm_config_registry": "https://fnpm.duxiaoman-int.com/",
+    "CLAUDE_CODE_PROXY_BYPASS": "*.local,*.company.com"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm config *)",
+      "Bash(git config *)"
+    ]
+  },
+  "hooks": {
+    "beforeBash": "echo 'Using proxy: $HTTPS_PROXY'"
+  }
+}

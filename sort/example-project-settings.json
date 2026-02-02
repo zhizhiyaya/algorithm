@@ -1,0 +1,22 @@
+{
+  "env": {
+    "PROJECT_NAME": "algorithm-sort",
+    "BUILD_ENV": "local",
+    "LINT_ON_SAVE": "true",
+    "HTTP_PROXY": "${HTTP_PROXY}",
+    "HTTPS_PROXY": "${HTTPS_PROXY}",
+    "NO_PROXY": "${NO_PROXY}"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm run test)",
+      "Bash(npm run lint)",
+      "Bash(npm run dev)"
+    ]
+  },
+  "hooks": {
+    "beforeEdit": "npm run lint:check",
+    "afterEdit": "npm run format"
+  }
+}

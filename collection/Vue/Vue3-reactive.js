@@ -1,26 +1,27 @@
 /**
- * 执行过程解析：
- * 1、effect 立即执行传入的函数
- * 2、读取 data.count 触发 Proxy 的 get 拦截
- * 3、track 将当前 effect 记录到 targetMap
- * 4、修改 data.count 触发 Proxy 的 set 拦截
- * 5、trigger 查找并执行所有关联的 effect
+ * 1、数据代理（ reactive 通过 Proxy 拦截读写）
+ * 2、依赖收集（effect 中用的值会被“订阅”）
+ * 3、依赖触发（当数据被修改时，重新运行对应的副作用函数）
  */
 
 // 通过 reactive() 函数创建响应式对象
 function reactive(target) {
-// Proxy 拦截读写
-    return new Proxy(target, { // Proxy 拦截读写
-        get(target, key, receiver) { // 拦截读取操作
-            track(target, key) // 依赖收集
-            return Reflect.get(...arguments)
-        },
-        set(target, key, value, receiver) { // 拦截写入操作
-            const result = Reflect.set(...arguments)
-            trigger(target, key) // 触发更新
-            return result
+    // Proxy 拦截读写
+    return new Proxy(target, {
+      get(obj, key, receiver) { // 拦截读取操作
+        const result = Reflect.get(...arguments);
+        track(obj, key); // 收集依赖
+        return result;
+      },
+      set(obj, key, value, receiver) { // 拦截写入操作
+        const oldValue = obj[key];
+        const result = Reflect.set(...arguments);
+        if (oldValue !== value) {
+          trigger(obj, key); // 触发依赖更新
         }
-    })
+        return result;
+      }
+    });
 }
 
 let activeEffect = null
@@ -35,7 +36,8 @@ function effect(fn) {
     return _effect
 }
 
-const targetMap = new WeakMap() // 存储对象-键-依赖关系
+// 全局依赖桶 targetMap，存储对象-键-依赖关系
+const targetMap = new WeakMap()
 
 // 依赖收集, 等同于 Dep 的 depend
 function track(target, key) {

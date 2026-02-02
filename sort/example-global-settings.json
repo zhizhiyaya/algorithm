@@ -1,0 +1,29 @@
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "NODE_ENV": "development",
+    "DEBUG": "1",
+    "HTTP_PROXY": "http://127.0.0.1:7890",
+    "HTTPS_PROXY": "http://127.0.0.1:7890",
+    "NO_PROXY": "localhost,127.0.0.1,.local"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(git *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(curl *)",
+      "Bash(wget *)"
+    ]
+  },
+  "includeCoAuthoredBy": true,
+  "cleanupPeriodDays": 60,
+  "hooks": {
+    "beforeBash": "echo 'Running command: $CLAUDE_COMMAND'",
+    "afterBash": "echo 'Command completed with exit code: $CLAUDE_EXIT_CODE'"
+  }
+}

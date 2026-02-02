@@ -60,13 +60,3 @@ function mergeSort(a, n) {
 }
 
 
-if (true) {
-    function test() {
-        alert(1)
-    }
-} else {
-    function test() {
-        alert(2)
-    }
-}
-test()

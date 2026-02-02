@@ -1,0 +1,14 @@
+{
+  "env": {
+    "DEVELOPER_NAME": "dxm",
+    "PREFERRED_EDITOR": "vscode",
+    "LOCAL_DEBUG": "true"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(code .)",
+      "Bash(open *)"
+    ]
+  },
+  "model": "claude-3-5-sonnet-20241022"
+}
