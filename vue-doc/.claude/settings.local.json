@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//Users/dxm/Documents/myFE/algorithm/alg-doc/**)"
-    ],
-    "deny": [],
-    "ask": []
-  }
-}
